@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 设置在class被修改时是否热加载，发布时要设置为false -->
+    <constant name="struts.convention.classes.reload" value="true"/>
+	
+	<package name="test" namespace="/" extends="json-default">
+		<action name="test" class="testAction" method="testAction">
+			<result>/WEB-INF/jsp/index.jsp</result>
+		</action>
+	</package>
+</struts>    
