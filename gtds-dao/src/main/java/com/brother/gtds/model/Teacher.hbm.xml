@@ -5,8 +5,8 @@
     
 <hibernate-mapping package="com.brother.model">
 	<class name="Teacher" table="teachers">
-		<id name="id" type="integer" column="id">
-			<generator class="identity"></generator>
+		<id name="id" type="string" column="id" length="6">
+			<generator class="assigned"></generator>
 		</id>
 		
 		<property name="name" column="name" type="string" length="50"></property>
@@ -15,11 +15,18 @@
 		<property name="email" column="email" type="string" length="50"></property>
 		<property name="phone" column="phone" type="string" length="11"></property>
 		<property name="department" column="department" type="string" length="20"></property>
+		<property name="position" column="position" type="string" length="20"></property>
+		<property name="research" column="research" type="string" length="50"></property>
 
-		<!--映射从 Teacher 到  Student 的一对多关联关系  -->
-		<set name="students">
+		<!--映射从 Teacher 到  Task 的一对多关联关系  -->
+		<set name="tasks">
 			<key column="tutor_id"></key>
-			<one-to-many class="Student"/>
+			<one-to-many class="Task"/>
+		</set>
+		<!--映射从 Teacher 到  ReplyGroup 的一对多关联关系  -->
+		<set name="groups">
+			<key column="tutor_id"></key>
+			<one-to-many class="ReplyGroup"/>
 		</set>
 
 	</class>

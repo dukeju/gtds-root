@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.brother.model">
+	<class name="Thesis" table="thesises">
+		<id name="id" type="string" column="id" length="10">
+			<generator class="assigned"></generator>
+		</id>
+		
+		<property name="name" column="name" type="string" length="50"></property>
+		<property name="title" column="title" type="string" length="50"></property>
+		<property name="explain" column="explain" type="string" length="200"></property>
+		<property name="date" column="date" type="date"></property>
+		
+		<!--映射从 Thesis 到  Student 的双向一对一关联关系，外键在对方表中  -->
+		<one-to-one name="student" property-ref="thesis"></one-to-one>
+
+	</class>
+</hibernate-mapping>

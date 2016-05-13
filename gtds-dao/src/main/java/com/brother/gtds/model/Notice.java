@@ -12,6 +12,8 @@ public class Notice implements Serializable {
 	private Date date;
 	private String title;
 	private String message;
+	//表示哪一个系的公告
+	private Department dapartment;
 	
 	public Integer getId() {
 		return id;
@@ -36,6 +38,12 @@ public class Notice implements Serializable {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public Department getDapartment() {
+		return dapartment;
+	}
+	public void setDapartment(Department dapartment) {
+		this.dapartment = dapartment;
 	}
 
 	

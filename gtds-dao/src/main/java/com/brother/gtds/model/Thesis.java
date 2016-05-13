@@ -8,20 +8,12 @@ public class Thesis implements Serializable{
 
 	private static final long serialVersionUID = 902349944245940853L;
 
-	private Integer id;
+	private String id;
 	private String title;
 	//论文说明
 	private String explain;
 	private Date date;
-	private String grade;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	private Student student;
 
 	public String getTitle() {
 		return title;
@@ -47,12 +39,20 @@ public class Thesis implements Serializable{
 		this.date = date;
 	}
 
-	public String getGrade() {
-		return grade;
+	public Student getStudent() {
+		return student;
 	}
 
-	public void setGrade(String grade) {
-		this.grade = grade;
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

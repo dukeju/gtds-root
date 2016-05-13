@@ -14,6 +14,10 @@ public class Student extends User {
 	private ReplyGroup group;
 	//课题
 	private Task task;
+	//论文成绩
+	private Integer thesisGrade;
+	//答辩成绩
+	private Integer replyGrade;
 
 	public ReplyGroup getGroup() {
 		return group;
@@ -53,6 +57,22 @@ public class Student extends User {
 
 	public void setTask(Task task) {
 		this.task = task;
+	}
+
+	public Integer getThesisGrade() {
+		return thesisGrade;
+	}
+
+	public void setThesisGrade(Integer thesisGrade) {
+		this.thesisGrade = thesisGrade;
+	}
+
+	public Integer getReplyGrade() {
+		return replyGrade;
+	}
+
+	public void setReplyGrade(Integer replyGrade) {
+		this.replyGrade = replyGrade;
 	}
 	
 }

@@ -8,7 +8,7 @@ public class Task implements Serializable {
 
 	private static final long serialVersionUID = 6235557918956045420L;
 
-	private Integer id;
+	private String id;
 	//课题名称
 	private String name;
 	//课题要求
@@ -25,14 +25,6 @@ public class Task implements Serializable {
 	private Integer capacity;
 	//课题由答辩小组导师组长来定
 	private Teacher tutor;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -96,6 +88,14 @@ public class Task implements Serializable {
 
 	public void setMajor(String major) {
 		this.major = major;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	

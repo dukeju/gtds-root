@@ -12,11 +12,9 @@ public class Teacher extends User {
 	//研究方向
 	private String research;
 	//课题，可以申请 1-3 个课题
-	private Set<Task> task = new HashSet<Task>();
+	private Set<Task> tasks = new HashSet<Task>();
 	//答辩小组
-	private ReplyGroup group;
-	//指导学生
-	private Set<Student> students = new HashSet<Student>();
+	private Set<ReplyGroup> groups = new HashSet<ReplyGroup>();
 	
 	public String getPosition() {
 		return position;
@@ -30,22 +28,16 @@ public class Teacher extends User {
 	public void setResearch(String research) {
 		this.research = research;
 	}
-	public ReplyGroup getGroup() {
-		return group;
+	public Set<ReplyGroup> getGroups() {
+		return groups;
 	}
-	public void setGroup(ReplyGroup group) {
-		this.group = group;
+	public void setGroups(Set<ReplyGroup> groups) {
+		this.groups = groups;
 	}
-	public Set<Task> getTask() {
-		return task;
+	public Set<Task> getTasks() {
+		return tasks;
 	}
-	public void setTask(Set<Task> task) {
-		this.task = task;
-	}
-	public Set<Student> getStudents() {
-		return students;
-	}
-	public void setStudents(Set<Student> students) {
-		this.students = students;
+	public void setTasks(Set<Task> tasks) {
+		this.tasks = tasks;
 	}
 }

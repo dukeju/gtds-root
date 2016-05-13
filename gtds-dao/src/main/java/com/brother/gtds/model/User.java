@@ -6,7 +6,7 @@ public abstract class User implements Serializable {
 
 	private static final long serialVersionUID = 3943262365995878180L;
 
-	private Integer id;
+	private String id;
 	//学号或工号
 	private String number;
 	private String name;
@@ -16,12 +16,6 @@ public abstract class User implements Serializable {
 	//院系
 	private Department department;
 	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
 	public String getNumber() {
 		return number;
 	}
@@ -57,6 +51,12 @@ public abstract class User implements Serializable {
 	}
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 
