@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.brother.model">
+	<class name="Student" table="students">
+		<id name="id" type="integer" column="id">
+			<generator class="identity"></generator>
+		</id>
+		
+		<property name="name" column="name" type="string" length="50"></property>
+		<property name="number" column="number" type="string" length="50"></property>
+		<property name="password" column="password" type="string" length="50"></property>
+		<property name="email" column="email" type="string" length="50"></property>
+		<property name="phone" column="phone" type="string" length="11"></property>
+		<property name="department" column="department" type="string" length="20"></property>
+		<property name="major" column="major" type="string" length="20"></property>
+		<property name="cla" column="class" type="string" length="20"></property>
+
+		<!--映射从 Student 到  Group 的多对一关联关系  -->
+		<many-to-one name="group" class="Group" column="group_id"></many-to-one>
+
+	</class>
+</hibernate-mapping>
