@@ -12,7 +12,9 @@ public class Notice implements Serializable {
 	private Date date;
 	private String title;
 	private String message;
-	//表示哪一个系的公告
+	//附带文件的地址
+	private String fileURL;
+	//表示哪一个系的公告，为空即向所有系发送公告
 	private Department dapartment;
 	
 	public Integer getId() {
@@ -44,6 +46,12 @@ public class Notice implements Serializable {
 	}
 	public void setDapartment(Department dapartment) {
 		this.dapartment = dapartment;
+	}
+	public String getFileURL() {
+		return fileURL;
+	}
+	public void setFileURL(String fileURL) {
+		this.fileURL = fileURL;
 	}
 
 	

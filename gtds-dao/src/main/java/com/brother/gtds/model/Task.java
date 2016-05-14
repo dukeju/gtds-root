@@ -14,7 +14,7 @@ public class Task implements Serializable {
 	//课题要求
 	private String demand;
 	//发布时间
-	private Date publish;
+	private Date publishDate;
 	//课题类型
 	private String type;
 	//面向专业
@@ -23,7 +23,7 @@ public class Task implements Serializable {
 	private String introduction;
 	//课题容量
 	private Integer capacity;
-	//课题由答辩小组导师组长来定
+	//课题由答辩小组指导老师来定
 	private Teacher tutor;
 
 	public String getName() {
@@ -41,15 +41,7 @@ public class Task implements Serializable {
 	public void setDemand(String demand) {
 		this.demand = demand;
 	}
-
-	public Date getPublish() {
-		return publish;
-	}
-
-	public void setPublish(Date publish) {
-		this.publish = publish;
-	}
-
+	
 	public Teacher getTutor() {
 		return tutor;
 	}
@@ -96,6 +88,14 @@ public class Task implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
 	}
 	
 	

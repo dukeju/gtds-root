@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.brother.model">
+	<class name="Task" table="tasks">
+		<id name="id" type="string" column="id" length="6">
+			<generator class="assigned"></generator>
+		</id>
+		
+		<property name="name" column="name" type="string" length="50"></property>
+		<property name="demand" column="demand" type="string" length="100"></property>
+		<property name="type" column="type" type="string" length="20"></property>
+		<property name="major" column="major" type="string" length="20"></property>
+		<property name="introduction" column="introduction" type="string" length="100"></property>
+		<property name="capacity" column="capacity" type="integer"></property>
+		<property name="pubilishDate" column="publish_date" type="date" update="false"></property>
+		
+		<!--映射从 Task 到  Teacher 的双向多对一关联关系，外键在对方表中  -->
+		<many-to-one name="tutor" class="Teacher" column="tutor_id"></many-to-one>
+
+	</class>
+</hibernate-mapping>

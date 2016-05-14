@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.brother.model">
+	<class name="Notice" table="notices">
+		<id name="id" type="integer" column="id">
+			<generator class="identity"></generator>
+		</id>
+		
+		<property name="title" column="title" type="string" length="50"></property>
+		<property name="message" column="message" type="string" length="500"></property>
+		<property name="fileURL" column="file_URL" type="string" length="100"></property>
+		<property name="date" column="publish_date" type="date" update="false"></property>
+		
+		<!--映射从 Notice 到  Department 的单向多对一关联关系，外键在对方表中  -->
+		<many-to-one name="department" class="Department" column="dept_id" not-null="false"></many-to-one>
+
+	</class>
+</hibernate-mapping>

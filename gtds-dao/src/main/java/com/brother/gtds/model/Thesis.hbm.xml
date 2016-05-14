@@ -12,7 +12,7 @@
 		<property name="name" column="name" type="string" length="50"></property>
 		<property name="title" column="title" type="string" length="50"></property>
 		<property name="explain" column="explain" type="string" length="200"></property>
-		<property name="date" column="date" type="date"></property>
+		<property name="date" column="date" type="date" update="false"></property>
 		
 		<!--映射从 Thesis 到  Student 的双向一对一关联关系，外键在对方表中  -->
 		<one-to-one name="student" property-ref="thesis"></one-to-one>

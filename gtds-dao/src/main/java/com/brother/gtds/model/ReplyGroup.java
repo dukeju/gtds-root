@@ -1,7 +1,6 @@
 package com.brother.gtds.model;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,15 +9,13 @@ public class ReplyGroup implements Serializable {
 
 	private static final long serialVersionUID = 8554048819969682322L;
 
-	private Integer id;
-	//小组名称
-	private String name;
+	private String id;
 	//答辩时间，由领导安排
-	private Date date;
+	private String time;
 	//答辩地点，由领导安排
 	private String place;
 	//是否公开答辩
-	private boolean pub;
+	private boolean pub = false;
 	//指导老师，课题由该老师提出
 	private Teacher advisor;
 	//评阅老师
@@ -30,24 +27,6 @@ public class ReplyGroup implements Serializable {
 	//导师，三个或以上的相似研究方向的导师，由领导安排
 	private Set<Teacher> tutors = new HashSet<Teacher>();
 	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Date getDate() {
-		return date;
-	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
 	public String getPlace() {
 		return place;
 	}
@@ -89,6 +68,18 @@ public class ReplyGroup implements Serializable {
 	}
 	public void setTutors(Set<Teacher> tutors) {
 		this.tutors = tutors;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
 	}
 	
 

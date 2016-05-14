@@ -6,9 +6,8 @@ public abstract class User implements Serializable {
 
 	private static final long serialVersionUID = 3943262365995878180L;
 
-	private String id;
 	//学号或工号
-	private String number;
+	private String id;
 	private String name;
 	private String password;
 	private String email;
@@ -16,12 +15,6 @@ public abstract class User implements Serializable {
 	//院系
 	private Department department;
 	
-	public String getNumber() {
-		return number;
-	}
-	public void setNumber(String number) {
-		this.number = number;
-	}
 	public String getName() {
 		return name;
 	}
