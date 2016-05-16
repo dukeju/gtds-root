@@ -15,7 +15,7 @@
 		<property name="date" column="publish_date" type="date" update="false"></property>
 		
 		<!--映射从 Notice 到  Department 的单向多对一关联关系，外键在对方表中  -->
-		<many-to-one name="department" class="Department" column="dept_id" not-null="false"></many-to-one>
+		<many-to-one name="dapartment" class="Department" column="dept_id" not-null="false"></many-to-one>
 
 	</class>
 </hibernate-mapping>

@@ -14,6 +14,7 @@ import com.brother.gtds.dao.BaseDao;
 /**
  * 抽象的 DAO ，专门用于继承
  */
+@SuppressWarnings("unchecked")
 public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 
 	//注入 SessionFactory
@@ -22,7 +23,6 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 	
 	private Class<T> clazz;
 	
-	@SuppressWarnings("unchecked")
 	public BaseDaoImpl()
 	{
 		//得到泛型化超类
@@ -65,6 +65,7 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 		query.executeUpdate();
 	}
 
+	
 	public T loadEntity(Integer id) {
 		return (T) factory.getCurrentSession().load(clazz, id);
 	}
@@ -93,7 +94,7 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 		return query.uniqueResult();
 	}
 	
-	public List<T> executeSQLQuery(Class clazz, String sql, Object...objects)
+	public List<T> executeSQLQuery(Class<?> clazz, String sql, Object...objects)
 	{
 		SQLQuery query = factory.getCurrentSession().createSQLQuery(sql);
 		//封装为实体
