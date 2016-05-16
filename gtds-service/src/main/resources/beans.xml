@@ -32,8 +32,17 @@
 				<prop key="hibernate.show_sql">true</prop>
 			</props>
 		</property>
-		<!-- 测试时使用annotation -->
-		<property name="packagesToScan" value="com.brother.gtds.model" />
+		<property name="mappingResources">
+			<list>
+				<value>com/brother/gtds/model/Notice.hbm.xml</value>
+				<value>com/brother/gtds/model/Department.hbm.xml</value>
+				<value>com/brother/gtds/model/ReplyGroup.hbm.xml</value>
+				<value>com/brother/gtds/model/Student.hbm.xml</value>
+				<value>com/brother/gtds/model/Task.hbm.xml</value>
+				<value>com/brother/gtds/model/Teacher.hbm.xml</value>
+				<value>com/brother/gtds/model/Thesis.hbm.xml</value>
+			</list>
+		</property>
 	</bean>
 
 	<!-- 配置Hibernate事务管理 -->
