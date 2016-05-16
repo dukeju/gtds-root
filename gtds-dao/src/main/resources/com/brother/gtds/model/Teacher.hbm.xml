@@ -26,7 +26,7 @@
 		<!--映射从 Teacher 到  ReplyGroup 的双向多对多关联关系  -->
 		<set name="groups" table="tutor_group">
 			<key column="tutor_id"></key>
-			<many-to-many class="ReplyGroup" column="group_id"></many-to-many>
+			<many-to-many class="ReplyGroup" column="replyGroup_id"></many-to-many>
 		</set>
 
 	</class>
