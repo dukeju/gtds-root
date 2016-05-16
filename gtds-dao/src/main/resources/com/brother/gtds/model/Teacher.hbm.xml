@@ -3,7 +3,7 @@
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
     
-<hibernate-mapping package="com.brother.model">
+<hibernate-mapping package="com.brother.gtds.model">
 	<class name="Teacher" table="teachers">
 		<id name="id" type="string" column="id" length="6">
 			<generator class="assigned"></generator>
