@@ -16,7 +16,7 @@
 	<dependencies>
 		<!-- service依赖 -->
 		<dependency>
-			<groupId>com.brother.gtds</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>gtds-service</artifactId>
 		</dependency>
 
