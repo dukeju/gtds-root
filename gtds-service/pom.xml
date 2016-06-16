@@ -9,7 +9,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>gtds-service</artifactId>
-	<name>gtds-service</name>
+	<name>gtds-service</name>   
 	<url>http://maven.apache.org</url>
 
 	<dependencies>

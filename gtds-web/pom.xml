@@ -6,9 +6,9 @@
 	<parent>
 		<groupId>com.brother.gtds</groupId>
 		<artifactId>gtds-root</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1-SNAPSHOT</version> 
 	</parent>
-
+ 
 	<artifactId>gtds-web</artifactId>
 	<packaging>war</packaging>
 	<name>gtds-web</name>
@@ -52,6 +52,7 @@
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -70,7 +71,7 @@
 						</connector>
 					</connectors>
 					<!-- 设置 上下文路径 -->
-					<contextPath>/</contextPath>
+					<contextPath>/gtds</contextPath>
 				</configuration>
 				<executions>
 					<execution>
