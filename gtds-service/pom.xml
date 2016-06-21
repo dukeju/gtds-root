@@ -9,15 +9,14 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>gtds-service</artifactId>
-	<name>gtds-service</name>
+	<name>gtds-service</name>   
 	<url>http://maven.apache.org</url>
 
 	<dependencies>
 		<!-- dao层 -->
 		<dependency>
-			<groupId>com.brother.gtds</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>gtds-dao</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
