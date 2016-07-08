@@ -5,8 +5,8 @@
     
 <hibernate-mapping package="com.brother.gtds.model">
 	<class name="Department" table="departments">
-		<id name="id" type="integer" column="id">
-			<generator class="identity"></generator>
+		<id name="id" type="string" column="id" length="2">
+			<generator class="assigned"></generator>
 		</id>
 		
 		<property name="name" column="name" type="string" length="20"></property>

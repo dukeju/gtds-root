@@ -8,6 +8,13 @@ public class Thesis implements Serializable{
 
 	private static final long serialVersionUID = 902349944245940853L;
 
+	/*
+	 * 论文编号格式
+	 * 	例如：2012000001
+	 * 		2012：年份
+	 * 		0：学位，0表示本科，1表示研究生，2表示硕士，3表示博士
+	 * 		00001：按顺序编号
+	 */
 	private String id;
 	private String title;
 	//论文说明
