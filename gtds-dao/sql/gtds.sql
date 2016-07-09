@@ -1,3 +1,4 @@
+#先不要用
 INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('02', '管理学院'); 
 INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('07', '经济与贸易学院'); 
 INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('05', '应用数学学院'); 
