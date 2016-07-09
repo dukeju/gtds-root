@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 //答辩小组
-public class ReplyGroup implements Serializable {
+public class AnswerGroup implements Serializable {
 
 	private static final long serialVersionUID = 8554048819969682322L;
 
@@ -17,13 +17,13 @@ public class ReplyGroup implements Serializable {
 	// 是否公开答辩
 	private boolean pub = false;
 	// 指导老师，课题由该老师提出
-	private Teacher advisor;
-	// 评阅老师
-	private Teacher valuator;
+	private Teacher tutor;
+	// 评阅老师，不能是指导老师
+	private Teacher insepector;
 	// 答辩小组组长
 	private Teacher head;
-	// 答辩记录人
-	private Teacher recorder;
+	// 答辩记录人名字
+	private String recorder;
 	// 导师，三个或以上的相似研究方向的导师，由领导安排
 	private Set<Teacher> tutors = new HashSet<Teacher>();
 
@@ -43,20 +43,20 @@ public class ReplyGroup implements Serializable {
 		this.pub = pub;
 	}
 
-	public Teacher getAdvisor() {
-		return advisor;
+	public Teacher getTutor() {
+		return tutor;
 	}
 
-	public void setAdvisor(Teacher advisor) {
-		this.advisor = advisor;
+	public void setTutor(Teacher tutor) {
+		this.tutor = tutor;
 	}
 
-	public Teacher getValuator() {
-		return valuator;
+	public Teacher getInsepector() {
+		return insepector;
 	}
 
-	public void setValuator(Teacher valuator) {
-		this.valuator = valuator;
+	public void setInsepector(Teacher insepector) {
+		this.insepector = insepector;
 	}
 
 	public Teacher getHead() {
@@ -67,11 +67,11 @@ public class ReplyGroup implements Serializable {
 		this.head = head;
 	}
 
-	public Teacher getRecorder() {
+	public String getRecorder() {
 		return recorder;
 	}
 
-	public void setRecorder(Teacher recorder) {
+	public void setRecorder(String recorder) {
 		this.recorder = recorder;
 	}
 

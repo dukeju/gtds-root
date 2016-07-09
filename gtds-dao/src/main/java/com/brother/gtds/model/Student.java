@@ -7,23 +7,31 @@ public class Student extends User {
 	//班级
 	private String cla;
 	//专业
-	private String major;
+	private Major major;
 	//论文
 	private Thesis thesis;
-	//答辩小组
-	private ReplyGroup group;
 	//课题
 	private Task task;
-	//论文成绩
-	private Integer thesisGrade;
-	//答辩成绩
-	private Integer replyGrade;
+	//指导老师
+	private Teacher tutor;
+	//评阅老师，不能是指导老师，副教授及副教授以上
+	private Teacher inspector;
+	//答辩小组
+	private AnswerGroup group;
+	
+	public Teacher getInspector() {
+		return inspector;
+	}
 
-	public ReplyGroup getGroup() {
+	public void setInspector(Teacher inspector) {
+		this.inspector = inspector;
+	}
+
+	public AnswerGroup getGroup() {
 		return group;
 	}
 
-	public void setGroup(ReplyGroup group) {
+	public void setGroup(AnswerGroup group) {
 		this.group = group;
 	}
 
@@ -35,11 +43,11 @@ public class Student extends User {
 		this.cla = cla;
 	}
 
-	public String getMajor() {
+	public Major getMajor() {
 		return major;
 	}
 
-	public void setMajor(String major) {
+	public void setMajor(Major major) {
 		this.major = major;
 	}
 
@@ -59,20 +67,13 @@ public class Student extends User {
 		this.task = task;
 	}
 
-	public Integer getThesisGrade() {
-		return thesisGrade;
+	public Teacher getTutor() {
+		return tutor;
 	}
 
-	public void setThesisGrade(Integer thesisGrade) {
-		this.thesisGrade = thesisGrade;
+	public void setTutor(Teacher tutor) {
+		this.tutor = tutor;
 	}
 
-	public Integer getReplyGrade() {
-		return replyGrade;
-	}
-
-	public void setReplyGrade(Integer replyGrade) {
-		this.replyGrade = replyGrade;
-	}
 	
 }
