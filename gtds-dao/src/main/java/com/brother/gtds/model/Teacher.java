@@ -8,10 +8,10 @@ public class Teacher extends User {
 	private static final long serialVersionUID = -5950952907776022353L;
 
 	// 职称
-	// 1=助教，2=讲师，3=副教授，4=教授
+	// 0=助教，1=讲师，2=副教授，3=教授
 	private Integer position;
 	// 研究方向，待定
-	private Integer research;
+	private String research;
 	//指导类别，0表示本科，1表示研究生，2表示硕士，3表示博士
 	private Integer type;
 	//指导人数不得大于6人（含6人）
@@ -29,11 +29,11 @@ public class Teacher extends User {
 		this.position = position;
 	}
 
-	public Integer getResearch() {
+	public String getResearch() {
 		return research;
 	}
 
-	public void setResearch(Integer research) {
+	public void setResearch(String research) {
 		this.research = research;
 	}
 
