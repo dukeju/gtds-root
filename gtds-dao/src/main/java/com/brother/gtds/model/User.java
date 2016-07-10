@@ -21,6 +21,11 @@ public abstract class User implements Serializable {
 	 * 		2008:年份
 	 * 		02：学院编号
 	 * 		0001：按顺序增大的编号
+	 * 管理员编号格式：
+	 * 	例如：20040801
+	 * 		2008:年份
+	 * 		02：学院编号
+	 * 		01：按顺序增大的编号
 	 */
 	private String id;
 	private String name;
