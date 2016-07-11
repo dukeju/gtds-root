@@ -20,5 +20,9 @@
 			</result>
 			<result name="success">/WEB-INF/jsp/success.jsp</result>
 		</action>
+		
+		<action name="StudentAction_*" class="studentAction" method="{1}">
+			<result name="taskListPage">/WEB-INF/jsp/taskList.jsp</result>
+		</action>
 	</package>
 </struts>    

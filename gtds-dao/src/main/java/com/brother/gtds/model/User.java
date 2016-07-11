@@ -27,13 +27,13 @@ public abstract class User implements Serializable {
 	 * 		02：学院编号
 	 * 		01：按顺序增大的编号
 	 */
-	private String id;
-	private String name;
-	private String password;
-	private String email;
-	private String phone;
+	protected String id;
+	protected String name;
+	protected String password;
+	protected String email;
+	protected String phone;
 	//院系
-	private Department department;
+	protected Department department;
 	
 	public String getName() {
 		return name;

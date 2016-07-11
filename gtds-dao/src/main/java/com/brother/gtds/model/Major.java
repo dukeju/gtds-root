@@ -25,4 +25,9 @@ public class Major implements Serializable {
 		this.majorName = majorName;
 	}
 
+	@Override
+	public String toString() {
+		return "Major [id=" + id + ", majorName=" + majorName + "]";
+	}
+
 }

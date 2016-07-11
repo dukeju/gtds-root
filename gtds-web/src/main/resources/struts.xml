@@ -20,5 +20,16 @@
 			</result>
 			<result name="success">/WEB-INF/jsp/success.jsp</result>
 		</action>
+		
+		<!-- StudentAction -->
+		<action name="StudentAction_*" class="studentAction" method="{1}">
+			<result name="studentListPage">/WEB-INF/jsp/studentList.jsp</result>
+		</action>
+		
+		<!-- teacherAction -->
+		<action name="TeacherAction_*" class="teacherAction" method="{1}">
+			<result name="teacherListPage">/WEB-INF/jsp/teacherList.jsp</result>
+			<result name="teacherListAction" type="redirect">TeacherAction_showTeachers</result>
+		</action>
 	</package>
 </struts>    

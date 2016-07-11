@@ -75,5 +75,13 @@ public class Student extends User {
 		this.tutor = tutor;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", name=" + name + ", password="
+				+ password + ", email=" + email + ", phone=" + phone
+				+ ", department=" + department + ", cla=" + cla + ", major="
+				+ major + ", thesis=" + thesis + ", task=" + task + ", tutor="
+				+ tutor + ", inspector=" + inspector + ", group=" + group + "]";
+	}
+
 }

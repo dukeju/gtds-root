@@ -23,8 +23,10 @@ public interface BaseService<T> {
 
 	// 读操作
 	public T loadEntity(Integer id);
+	public T loadEntity(String id);
 
 	public T getEntity(Integer id);
+	public T getEntity(String id);
 
 	public List<T> findEntityByHQL(String hql, Object... objects);
 

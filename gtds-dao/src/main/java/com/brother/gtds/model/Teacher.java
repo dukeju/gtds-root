@@ -12,7 +12,7 @@ public class Teacher extends User {
 	private Integer position;
 	// 研究方向，待定
 	private String research;
-	//指导类别，0表示本科，1表示研究生，2表示硕士，3表示博士
+	//指导类别，0表示专科，1表示本科，2表示研究生，3表示硕士，4表示博士
 	private Integer type;
 	//指导人数不得大于6人（含6人）
 	private Integer count;
@@ -68,4 +68,14 @@ public class Teacher extends User {
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
+
+	@Override
+	public String toString() {
+		return "Teacher [id=" + id + ", name=" + name + ", password="
+				+ password + ", email=" + email + ", phone=" + phone
+				+ ", department=" + department + ", position=" + position
+				+ ", research=" + research + ", type=" + type + ", count="
+				+ count + "]";
+	}
+
 }

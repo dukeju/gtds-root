@@ -6,14 +6,20 @@
 	<parent>
 		<groupId>com.brother.gtds</groupId>
 		<artifactId>gtds-root</artifactId>
-		<version>0.0.1-SNAPSHOT</version> 
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
- 
+
 	<artifactId>gtds-web</artifactId>
 	<packaging>war</packaging>
 	<name>gtds-web</name>
 
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- service依赖 -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -24,13 +30,13 @@
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-core</artifactId>
-			
-		<!-- 	<exclusions>
+			<exclusions>
+				<!-- 排除struts依赖里的javassist包 -->
 				<exclusion>
-					<groupId>org.javassist</groupId>
+					<groupId>javassist</groupId>
 					<artifactId>javassist</artifactId>
 				</exclusion>
-			</exclusions> -->
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.struts</groupId>
@@ -82,11 +88,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-			<plugin>  
-				<groupId>org.apache.maven.plugins</groupId>  
-				<artifactId>maven-compiler-plugin</artifactId>  
-			</plugin>  
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 </project>
