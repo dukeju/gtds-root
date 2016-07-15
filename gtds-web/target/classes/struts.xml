@@ -29,6 +29,10 @@
 		<!-- teacherAction -->
 		<action name="TeacherAction_*" class="teacherAction" method="{1}">
 			<result name="teacherListPage">/WEB-INF/jsp/teacherList.jsp</result>
+		</action>
+		
+		<!-- AdminAction -->
+		<action name="AdminAction_*" class="adminAction" method="{1}">
 			<result name="teacherListAction" type="redirect">TeacherAction_showTeachers</result>
 		</action>
 	</package>

@@ -25,22 +25,11 @@ public class TeacherAction extends BaseAction<Teacher>{
 	//装载符合条件的Teacher的List
 	private List<Teacher> teachers;
 	
-	private String id;
-	
-	private Integer type;
-	
 	//显示符合条件的教师
 	public String showTeachers()
 	{
 		teachers = teacherService.findByQuery(idQuery, nameQuery, positionQuery, typeQuery); 
 		return "teacherListPage";
-	}
-	
-	//修改教师的指导类型
-	public String updateType()
-	{
-		teacherService.updateType(id, type);
-		return "teacherListAction";
 	}
 
 	public String getIdQuery() {
@@ -81,22 +70,6 @@ public class TeacherAction extends BaseAction<Teacher>{
 
 	public void setTeachers(List<Teacher> teachers) {
 		this.teachers = teachers;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Integer getType() {
-		return type;
-	}
-
-	public void setType(Integer type) {
-		this.type = type;
 	}
 
 }
