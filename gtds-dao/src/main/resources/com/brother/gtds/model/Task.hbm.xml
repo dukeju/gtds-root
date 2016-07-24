@@ -11,11 +11,12 @@
 		
 		<property name="name" column="name" type="string" length="50"></property>
 		<property name="demand" column="demand" type="string" length="100"></property>
-		<property name="type" column="type" type="string" length="20"></property>
+		<property name="type" column="type" type="integer"></property>
 		<property name="capacity" column="capacity" type="integer"></property>
 		<property name="source" column="source" type="integer"></property>
 		<property name="publishDate" column="publish_date" type="date" update="false"></property>
 		<property name="pass" column="pass" type="boolean"></property>
+		<property name="path" column="path" type="string" length="50"></property>
 		
 		<!--映射从 Task 到  Major 的单向多对一关联关系，外键在该表中  -->
 		<many-to-one name="major" class="Major" column="major_id"></many-to-one>

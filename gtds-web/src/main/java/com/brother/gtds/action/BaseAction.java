@@ -15,7 +15,7 @@ public abstract class BaseAction<T> extends ActionSupport implements Preparable,
 	{
 		Class<T> clazz = ReflectionUtils.getSuperGenericType(this.getClass());
 		try {
-			model = clazz.newInstance();
+			model = (T) clazz.newInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

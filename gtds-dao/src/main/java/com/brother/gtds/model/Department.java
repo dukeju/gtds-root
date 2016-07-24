@@ -1,6 +1,7 @@
 package com.brother.gtds.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 //院系
 public class Department implements Serializable {
@@ -9,6 +10,17 @@ public class Department implements Serializable {
 
 	private String id;
 	private String name;
+	//出论文课题的截止日期
+	private Date expiryDate;
+
+	public Department() {
+		super();
+	}
+
+	public Department(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
 	public String getId() {
 		return id;
@@ -26,9 +38,12 @@ public class Department implements Serializable {
 		this.name = name;
 	}
 
-	@Override
-	public String toString() {
-		return "Department [id=" + id + ", name=" + name + "]";
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 
 }

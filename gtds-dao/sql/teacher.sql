@@ -1,2 +1,2 @@
-INSERT INTO `gtds`.`teachers` (`id`, `name`, `password`, `email`, `phone`, `position`, `research`, `type`, `count`, `dept_id`) VALUES ('2008080001', '丁天翔', '123', 'tianxiang@163.com', '321', '1', '系统开发', '1', '6', '08'); 
+INSERT INTO `gtds`.`teachers` (`id`, `name`, `password`, `email`, `phone`, `position`, `research`, `type`, `count`, `dept_id`) VALUES ('2008080001', '丁天翔', '123', 'tianxiang@163.com', '321', '1', '系统开发', '1', '10', '08'); 
 INSERT INTO `gtds`.`teachers` (`id`, `name`, `password`, `email`, `phone`, `position`, `research`, `type`, `count`, `dept_id`) VALUES ('2006020002', '李建中', '456', 'jianzhong@163.com', '654', '2', '现代自动化装备技术', '2', '6', '02');
