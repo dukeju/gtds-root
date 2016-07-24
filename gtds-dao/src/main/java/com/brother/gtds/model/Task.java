@@ -29,6 +29,16 @@ public class Task implements Serializable {
 	private Integer capacity;
 	//课题由指导老师来定
 	private Teacher tutor;
+	
+	private String path;
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 
 	public String getName() {
 		return name;
@@ -110,6 +120,5 @@ public class Task implements Serializable {
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
 	}
-	
 	
 }

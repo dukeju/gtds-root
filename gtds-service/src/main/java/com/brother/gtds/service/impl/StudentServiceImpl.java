@@ -37,11 +37,15 @@ public class StudentServiceImpl extends BaseServiceImpl<Student> implements
 		}
 		if(ValidationUtils.validateString(majorQuery))
 		{
-			hql += "s.major.majorName = '" + majorQuery + "' and ";
+			//如果选择的不是全部专业
+			if(!majorQuery.equals("00"))
+				hql += "s.major.id = '" + majorQuery + "' and ";
 		}
 		if(ValidationUtils.validateString(departmentQuery))
 		{
-			hql += "s.department.name = '" + departmentQuery + "' and ";
+			//如果选择的不是全部学院
+			if(!departmentQuery.equals("00"))
+				hql += "s.department.id = '" + departmentQuery + "' and ";
 		}
 		if(ValidationUtils.validateString(tutorQuery))
 		{

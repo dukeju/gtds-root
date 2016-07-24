@@ -14,7 +14,7 @@ import com.brother.gtds.utils.ValidationUtils;
 @Service("teacherService")
 public class TeacherServiceImpl extends BaseServiceImpl<Teacher> implements
 		TeacherService {
-
+	
 	@Resource(name="teacherDao")
 	public void setDao(BaseDao<Teacher> dao)
 	{
@@ -23,7 +23,7 @@ public class TeacherServiceImpl extends BaseServiceImpl<Teacher> implements
 
 	//查找出符合条件的Teacher
 	@Override
-	public List<Teacher> findByQuery(String idQuery, String nameQuery,
+	public List<Teacher> findByQuery(String idQuery, String nameQuery, String departmentQuery, 
 			String positionQuery, String typeQuery) {
 		String hql = "from Teacher t where ";
 		if(ValidationUtils.validateString(idQuery))
@@ -34,13 +34,20 @@ public class TeacherServiceImpl extends BaseServiceImpl<Teacher> implements
 		{
 			hql += "t.name = '" + nameQuery + "' and ";
 		}
+		if(ValidationUtils.validateString(departmentQuery))
+		{
+			if(!departmentQuery.equals("00"))
+				hql += "t.department.id = '" + departmentQuery + "' and ";
+		}
 		if(ValidationUtils.validateString(positionQuery))
 		{
-			hql += "t.position = '" + positionQuery + "' and ";
+			if(!positionQuery.equals("-1"))
+				hql += "t.position = '" + positionQuery + "' and ";
 		}
 		if(ValidationUtils.validateString(typeQuery))
 		{
-			hql += "t.type = '" + typeQuery + "' and ";
+			if(!typeQuery.equals("-1"))
+				hql += "t.type = '" + typeQuery + "' and ";
 		}
 		
 		//如果查询条件都为空
@@ -57,10 +64,24 @@ public class TeacherServiceImpl extends BaseServiceImpl<Teacher> implements
 		return list;
 	}
 
-	//更新教师的指导类型
+	//获得老师的详细信息
 	@Override
-	public void updateType(String id, Integer type) {
-		this.getEntity(id).setType(type);
+	public Teacher getTeacherInfo(String id) {
+		Teacher t = this.getEntity(id);
+		t.getDepartment().getName();
+		t.getTasks().size();
+		t.getGroups().size();
+		return t;
+	}
+
+	//更新指导类型和数目
+	@Override
+	public void updateTypeAndCount(String id, Integer type, Integer count) {
+		Teacher t = this.getEntity(id);
+		t.setType(type);
+		if(count == null)
+			count = 0;
+		t.setCount(count);
 	}
 
 }

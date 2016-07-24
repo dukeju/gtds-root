@@ -10,6 +10,7 @@
 		</id>
 		
 		<property name="name" column="name" type="string" length="20"></property>
+		<property name="expiryDate" column="expiry_date" type="date"></property>
 		
 	</class>
 </hibernate-mapping>

@@ -1,5 +1,5 @@
 <%@ page language="java"  pageEncoding="UTF-8"%>
-<%@ taglib uri="/struts-tags" prefix="s" %>
+<%@ taglib uri="/struts-tags" prefix="s" %> 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -84,11 +84,24 @@
   </head>
   
   <body>
-    <s:form action="LoginAction_doLogin" namespace="/" method="post" onsubmit="return validateIdentity()"> 
+    <s:form action="LoginAction_doLogin" namespace="/" method="post"> 
     	<table>
     		<tr>
+    			<td>账号：</td>
+    			<td><s:textfield name="id" value="2006020002"></s:textfield></td>
+    		</tr>
+    		<tr>
+    			<td>密码：</td>
+    			<td><s:password name="password" value="123"></s:password></td>
+    		</tr>
+    		<tr>
+    			<td></td>
+    			<td><s:actionerror/></td>
+    		</tr>
+    		<!-- 
+    		<tr>
     			<td>验证码：</td>
-    			<td><s:textfield name="identity" id="identity"></s:textfield></td>
+    			<td><s:textfield name="identity" id="identity"></s:textfield></td>  
     		</tr>
     		<tr>
     			<td></td>
@@ -97,11 +110,18 @@
     				<a href="#" onclick="changeIdentity()">看不清，换一个</a>
     			</td>
     		</tr>
+    		-->
+    		<tr>
+    			<td>身份</td>
+    			<td>
+    				<s:radio list="#{0:'学生',1:'教师',2:'管理员'}" name="status"></s:radio>
+    			</td>
+    		</tr>
     		<tr>
     			<td></td>
-    			<td><s:submit value="登陆"></s:submit></td>
+    			<td><s:submit value="登陆"></s:submit></td>  
     		</tr>
     	</table>  
-    </s:form>
+    </s:form>  
   </body>
 </html>

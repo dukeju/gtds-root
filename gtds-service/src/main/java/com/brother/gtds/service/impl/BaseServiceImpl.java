@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import com.brother.gtds.dao.BaseDao;
 import com.brother.gtds.service.BaseService;
+import com.brother.gtds.utils.ReflectionUtils;
 
 /**
  *基本的业务逻辑类
@@ -14,6 +15,13 @@ import com.brother.gtds.service.BaseService;
 public abstract class BaseServiceImpl<T> implements BaseService<T> {
 
 	private BaseDao<T> dao;
+	
+	private Class<T> clazz;
+	
+	public BaseServiceImpl()
+	{
+		clazz = ReflectionUtils.getSuperGenericType(getClass());
+	}
 	
 	@Resource
 	public void setDao(BaseDao<T> dao) {
@@ -62,6 +70,12 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
 
 	public List<T> findEntityByHQL(String hql, Object... objects) {
 		return dao.findEntityByHQL(hql, objects);
+	}
+	
+	public List<T> findAllEntities()
+	{
+		String hql = "from " + clazz.getSimpleName();
+		return this.findEntityByHQL(hql);
 	}
 
 	public Object uniqueResult(String hql, Object... objects) {

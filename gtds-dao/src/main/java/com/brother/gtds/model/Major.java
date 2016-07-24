@@ -9,6 +9,15 @@ public class Major implements Serializable {
 	private String id;
 	private String majorName;
 
+	public Major() {
+		super();
+	}
+
+	public Major(String id, String majorName) {
+		this.id = id;
+		this.majorName = majorName;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -23,11 +32,6 @@ public class Major implements Serializable {
 
 	public void setMajorName(String majorName) {
 		this.majorName = majorName;
-	}
-
-	@Override
-	public String toString() {
-		return "Major [id=" + id + ", majorName=" + majorName + "]";
 	}
 
 }

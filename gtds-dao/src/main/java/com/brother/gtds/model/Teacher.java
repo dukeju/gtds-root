@@ -20,6 +20,14 @@ public class Teacher extends User {
 	private Set<Task> tasks = new HashSet<Task>();
 	// 答辩小组
 	private Set<AnswerGroup> groups = new HashSet<AnswerGroup>();
+	
+	public Teacher(String id) {
+		this.id = id;
+	}
+	
+	public Teacher() {
+		super();
+	}
 
 	public Integer getPosition() {
 		return position;
@@ -67,15 +75,6 @@ public class Teacher extends User {
 
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
-	}
-
-	@Override
-	public String toString() {
-		return "Teacher [id=" + id + ", name=" + name + ", password="
-				+ password + ", email=" + email + ", phone=" + phone
-				+ ", department=" + department + ", position=" + position
-				+ ", research=" + research + ", type=" + type + ", count="
-				+ count + "]";
 	}
 
 }
