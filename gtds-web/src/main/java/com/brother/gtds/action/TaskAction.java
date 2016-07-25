@@ -4,10 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
+import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.util.ServletContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,7 @@ import com.brother.gtds.utils.ValidationUtils;
 
 @Controller
 @Scope("prototype")
-public class TaskAction extends BaseAction<Task> implements TeacherAware, ServletContextAware{
+public class TaskAction extends BaseAction<Task> implements TeacherAware, ServletContextAware, RequestAware{
 
 	private static final long serialVersionUID = 6887834321049118028L;
 	
@@ -57,6 +59,7 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	private String fileContentType;
 	
 	private ServletContext sc;
+	private Map<String, Object> request;
 	
 	////查找所有通过审核的课题
 	public String showHistoryTasks()
@@ -72,6 +75,9 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	//到达我的课题页面（只显示本届的）
 	public String myCurrentTasks()
 	{
+		request.put("minCount", teacher.getMinCount());
+		request.put("maxCount", teacher.getMaxCount());
+		
 		myTasks = taskService.getMyCurrentTasks(teacher.getId());
 		return "myTaskListPage";
 	}
@@ -79,6 +85,9 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	//到达我的课题页面（显示全部的）
 	public String myAllTasks()
 	{
+		request.put("minCount", teacher.getMinCount());
+		request.put("maxCount", teacher.getMaxCount());
+		
 		myTasks = taskService.getMyAllTasks(teacher.getId());
 		return "myTaskListPage";
 	}	
@@ -175,6 +184,12 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 		return taskService.getRestCapacity(id, teacher);
 	}
 	
+	//是否超过导师的最小指导人数
+	public boolean beyondMinCount()
+	{
+		return taskService.getTotalCount(teacher) >= teacher.getMinCount();
+	}
+	
 	public String getMajorQuery() {
 		return majorQuery;
 	}
@@ -267,6 +282,11 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	@Override
 	public void setServletContext(ServletContext arg0) {
 		this.sc = arg0;
+	}
+
+	@Override
+	public void setRequest(Map<String, Object> arg0) {
+		request = arg0;
 	}
 
 }

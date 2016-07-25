@@ -29,6 +29,8 @@ public class Task implements Serializable {
 	private Integer capacity;
 	//课题由指导老师来定
 	private Teacher tutor;
+	//评审教师
+	private Teacher inspector;
 	
 	private String path;
 
@@ -119,6 +121,14 @@ public class Task implements Serializable {
 
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
+	}
+
+	public Teacher getInspector() {
+		return inspector;
+	}
+
+	public void setInspector(Teacher inspector) {
+		this.inspector = inspector;
 	}
 	
 }

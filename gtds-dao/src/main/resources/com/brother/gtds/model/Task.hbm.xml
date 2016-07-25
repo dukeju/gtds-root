@@ -22,6 +22,8 @@
 		<many-to-one name="major" class="Major" column="major_id"></many-to-one>
 		<!--映射从 Task 到  Teacher 的双向多对一关联关系，外键在该表中  -->
 		<many-to-one name="tutor" class="Teacher" column="tutor_id"></many-to-one>
+		<!--映射从 Task 到  Teacher 的单向多对一关联关系，外键在该表中  -->
+		<many-to-one name="inspector" class="Teacher" column="inspector_id"></many-to-one>		
 
 	</class>
 </hibernate-mapping>

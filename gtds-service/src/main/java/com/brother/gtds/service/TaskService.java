@@ -30,5 +30,8 @@ public interface TaskService extends BaseService<Task> {
 
 	//除去指定课题外的最大课题剩余容量
 	int getRestCapacity(Integer id, Teacher teacher);
+
+	//获得本届本教师的课题容量总和
+	int getTotalCount(Teacher teacher);
 	
 }

@@ -76,12 +76,11 @@ public class TeacherServiceImpl extends BaseServiceImpl<Teacher> implements
 
 	//更新指导类型和数目
 	@Override
-	public void updateTypeAndCount(String id, Integer type, Integer count) {
+	public void updateTypeAndCount(String id, Teacher model) {
 		Teacher t = this.getEntity(id);
-		t.setType(type);
-		if(count == null)
-			count = 0;
-		t.setCount(count);
+		t.setType(model.getType());
+		t.setMinCount(model.getMinCount()==null?0:model.getMinCount());
+		t.setMaxCount(model.getMaxCount()==null?0:model.getMaxCount());
 	}
 
 }

@@ -14,6 +14,6 @@ public interface TeacherService extends BaseService<Teacher> {
 	Teacher getTeacherInfo(String id);
 
 	//更新指导类型和数目
-	void updateTypeAndCount(String id, Integer type, Integer count);
+	void updateTypeAndCount(String id, Teacher model);
 
 }

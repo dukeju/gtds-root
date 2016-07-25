@@ -65,17 +65,17 @@ public class TeacherAction extends BaseAction<Teacher> {
 	{
 		model = teacherService.getEntity(teacherId);
 		//如果count为null，则文本框为默认值6
-		if(model.getCount() == null)
-			teacherCount = 6;
-		else
-			teacherCount = model.getCount();
+//		if(model.getCount() == null)
+//			teacherCount = 6;
+//		else
+//			teacherCount = model.getCount();
 		return "editTypeAndCountPage";
 	}
 	
 	//更新指导类型和数目
 	public String updateTypeAndCount()
 	{
-		this.teacherService.updateTypeAndCount(teacherId, teacherType, teacherCount);
+		this.teacherService.updateTypeAndCount(teacherId, model);
 		return "teacherInfoAction";
 	}
 

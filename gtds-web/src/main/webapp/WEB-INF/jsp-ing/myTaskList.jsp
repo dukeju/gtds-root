@@ -7,11 +7,6 @@
     
     <title>我的课题</title>
 
-	<script type="text/javascript" src='<s:url value="/script/jquery-1.12.1.js"/>'></script>
-	<script type="text/javascript">
-		
-	</script>
-
   </head>
   
   <body>
@@ -22,6 +17,18 @@
     <s:if test="#newTask">
   		<s:a action="TaskAction_editTask" namespace="/">新建课题</s:a>
   	</s:if>
+  	<br>
+  	我的最小指导人数：${requestScope.minCount }
+  	<s:set value="beyondMinCount()" var="beyondMinCount"></s:set>
+  	<s:if test="#beyondMinCount">
+  		(已经达到最小指导人数的要求)
+  	</s:if>
+  	<s:else>
+  		(<font color="red">还没达到最小指导人数的要求</font>)
+  	</s:else>
+  	<br>
+  	我的最大指导人数：${requestScope.maxCount }
+  	
     <table border="1" cellspacing="0" width="100%">
     	<tr>
     		<td></td>

@@ -14,8 +14,9 @@ public class Teacher extends User {
 	private String research;
 	//指导类别，0表示专科，1表示本科，2表示研究生，3表示硕士，4表示博士
 	private Integer type;
-	//指导人数不得大于6人（含6人）
-	private Integer count;
+	//指导人数
+	private Integer minCount;
+	private Integer maxCount;
 	// 课题，一般申请 1-3 个课题
 	private Set<Task> tasks = new HashSet<Task>();
 	// 答辩小组
@@ -53,12 +54,20 @@ public class Teacher extends User {
 		this.type = type;
 	}
 
-	public Integer getCount() {
-		return count;
+	public Integer getMinCount() {
+		return minCount;
 	}
 
-	public void setCount(Integer count) {
-		this.count = count;
+	public Integer getMaxCount() {
+		return maxCount;
+	}
+
+	public void setMinCount(Integer minCount) {
+		this.minCount = minCount;
+	}
+
+	public void setMaxCount(Integer maxCount) {
+		this.maxCount = maxCount;
 	}
 
 	public Set<AnswerGroup> getGroups() {

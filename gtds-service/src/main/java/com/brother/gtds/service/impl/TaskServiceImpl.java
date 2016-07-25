@@ -180,7 +180,7 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 	//除去指定课题外的最大课题剩余容量
 	@Override
 	public int getRestCapacity(Integer id, Teacher teacher) {
-		int capacity = teacher.getCount();
+		int capacity = teacher.getMaxCount();
 		List<Task> tasks = this.getMyCurrentTasks(teacher.getId());
 		for(Task task : tasks)
 		{
@@ -190,6 +190,18 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 			capacity = capacity - task.getCapacity();	
 		}
 		return capacity;
+	}
+
+	//获得本届本教师的课题容量总和
+	@Override
+	public int getTotalCount(Teacher teacher) {
+		List<Task> tasks = this.getMyCurrentTasks(teacher.getId());
+		int count = 0;
+		for(Task t : tasks)
+		{
+			count += t.getCapacity();
+		}
+		return count;
 	}
 
 }

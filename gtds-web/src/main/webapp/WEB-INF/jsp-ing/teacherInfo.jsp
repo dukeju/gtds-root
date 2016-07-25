@@ -18,7 +18,8 @@
   	学院：<s:property value="department.name"/><br>
   	职称：<s:property value="%{#positions[position]}"/><br>
   	指导类型：<s:property value="%{#types[type]}"/><br>
-  	指导人数：<s:property value="count"/><br>
+  	最小指导人数：<s:property value="minCount"/><br>
+  	最大指导人数：<s:property value="maxCount"/><br>
   	<a href='TeacherAction_editTypeAndCount?teacherId=<s:property value='id'/>'>修改指导类型和数目</a><br>
   	研究方向：<s:property value="research"/><br>
   	邮箱：<s:property value="email"/><br>
