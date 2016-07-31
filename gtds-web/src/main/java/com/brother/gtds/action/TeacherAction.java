@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.brother.gtds.model.Department;
-import com.brother.gtds.model.Task;
 import com.brother.gtds.model.Teacher;
 import com.brother.gtds.service.DepartmentService;
+import com.brother.gtds.service.TaskService;
 import com.brother.gtds.service.TeacherService;
 
 @Controller
@@ -23,10 +23,10 @@ public class TeacherAction extends BaseAction<Teacher> {
 	private TeacherService teacherService;
 	@Resource
 	private DepartmentService departmentService;
+	@Resource
+	private TaskService taskService;
 	
 	private String teacherId;
-	private Integer teacherType;
-	private Integer teacherCount;
 	
 	//查询条件
 	private String idQuery;
@@ -38,9 +38,6 @@ public class TeacherAction extends BaseAction<Teacher> {
 	//装载符合条件的Teacher的List
 	private List<Teacher> teachers;
 	private List<Department> departments;
-	
-	//自己本届出的课题
-	private List<Task> myTasks;
 	
 	//显示符合条件的教师
 	public String showTeachers()
@@ -64,11 +61,6 @@ public class TeacherAction extends BaseAction<Teacher> {
 	public String editTypeAndCount()
 	{
 		model = teacherService.getEntity(teacherId);
-		//如果count为null，则文本框为默认值6
-//		if(model.getCount() == null)
-//			teacherCount = 6;
-//		else
-//			teacherCount = model.getCount();
 		return "editTypeAndCountPage";
 	}
 	
@@ -77,6 +69,21 @@ public class TeacherAction extends BaseAction<Teacher> {
 	{
 		this.teacherService.updateTypeAndCount(teacherId, model);
 		return "teacherInfoAction";
+	}
+	
+	//显示教师出题情况
+	public String showTeacherTaskSituation()
+	{
+		teachers = this.teacherService.findAllEntities();
+		return "teacherTaskListPage";
+	}
+	
+	//获得本届本教师的课题容量总和
+	public int getTotalCount(String id)
+	{
+		Teacher t = new Teacher();
+		t.setId(id);
+		return taskService.getTotalCount(t);
 	}
 
 	public List<Department> getDepartments() {
@@ -135,36 +142,12 @@ public class TeacherAction extends BaseAction<Teacher> {
 		this.departmentQuery = departmentQuery;
 	}
 
-	public List<Task> getMyTasks() {
-		return myTasks;
-	}
-
-	public void setMyTasks(List<Task> myTasks) {
-		this.myTasks = myTasks;
-	}
-
 	public String getTeacherId() {
 		return teacherId;
 	}
 
 	public void setTeacherId(String teacherId) {
 		this.teacherId = teacherId;
-	}
-
-	public Integer getTeacherType() {
-		return teacherType;
-	}
-
-	public void setTeacherType(Integer teacherType) {
-		this.teacherType = teacherType;
-	}
-
-	public Integer getTeacherCount() {
-		return teacherCount;
-	}
-
-	public void setTeacherCount(Integer teacherCount) {
-		this.teacherCount = teacherCount;
 	}
 
 }

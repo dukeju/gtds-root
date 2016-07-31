@@ -88,9 +88,10 @@
     	上传教师拟题评审表：<s:file name="file"></s:file>
     	<s:hidden name="path"></s:hidden>
     	<s:set value="path" var="path"></s:set>
-    	<s:if test="#path != null">
+    	<s:if test="#path != null && #path !=''">
     		<font color="red">你已经上传过评审表，再次上传可以覆盖</font>
     	</s:if>
+    	<s:fielderror name="file"></s:fielderror>
     	<br>
     	下载附件：<s:a action="DownloadAction?number=4">广东工业大学本科生毕业设计（论文）教师拟题审批表.docx</s:a><br>
     	<s:submit value="确定" onclick="return validateName()"></s:submit>

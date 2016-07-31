@@ -7,16 +7,20 @@ import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.brother.gtds.action.aware.StudentAware;
 import com.brother.gtds.model.Department;
 import com.brother.gtds.model.Major;
 import com.brother.gtds.model.Student;
+import com.brother.gtds.model.Task;
+import com.brother.gtds.model.User;
 import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.MajorService;
 import com.brother.gtds.service.StudentService;
+import com.brother.gtds.service.TaskService;
 
 @Controller
 @Scope("prototype")
-public class StudentAction extends BaseAction<Student> {
+public class StudentAction extends BaseAction<Student> implements StudentAware {
 
 	private static final long serialVersionUID = 7919543107393901986L;
 
@@ -26,6 +30,10 @@ public class StudentAction extends BaseAction<Student> {
 	private MajorService majorService;
 	@Resource
 	private DepartmentService departmentService;
+	@Resource
+	private TaskService taskService;
+	
+	private Student user;
 	
 	//查询条件
 	private String idQuery;
@@ -41,6 +49,8 @@ public class StudentAction extends BaseAction<Student> {
 	private List<Major> majors;
 	private List<Department> departments;
 	
+	private List<Task> choiceTasks;
+	
 	//显示符合条件的学生信息
 	public String showStudents()
 	{
@@ -54,6 +64,13 @@ public class StudentAction extends BaseAction<Student> {
 		
 		this.students = studentService.findByQuery(idQuery, nameQuery, majorQuery, departmentQuery, tutorQuery, taskQuery);
 		return "studentListPage";
+	}
+	
+	//显示所有可选的课题
+	public String showChoiceTasks()
+	{
+		this.choiceTasks = this.taskService.findHistoryPassTasks(user.getMajor().getId(), 0);
+		return "choiceTasksPage";
 	}
 
 	public String getIdQuery() {
@@ -126,6 +143,19 @@ public class StudentAction extends BaseAction<Student> {
 
 	public void setDepartments(List<Department> departments) {
 		this.departments = departments;
+	}
+
+	public List<Task> getChoiceTasks() {
+		return choiceTasks;
+	}
+
+	public void setChoiceTasks(List<Task> choiceTasks) {
+		this.choiceTasks = choiceTasks;
+	}
+
+	@Override
+	public void setUser(User user) {
+		this.user = (Student) user;
 	}
 	
 }

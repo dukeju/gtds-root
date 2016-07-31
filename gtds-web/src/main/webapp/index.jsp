@@ -92,7 +92,7 @@
     		</tr>
     		<tr>
     			<td>密码：</td>
-    			<td><s:password name="password" value="123"></s:password></td>
+    			<td><s:password name="password"></s:password></td>
     		</tr>
     		<tr>
     			<td></td>

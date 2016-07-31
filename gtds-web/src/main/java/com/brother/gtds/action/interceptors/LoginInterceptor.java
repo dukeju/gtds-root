@@ -2,8 +2,7 @@ package com.brother.gtds.action.interceptors;
 
 import com.brother.gtds.action.BaseAction;
 import com.brother.gtds.action.LoginAction;
-import com.brother.gtds.action.aware.TeacherAware;
-import com.brother.gtds.model.Teacher;
+import com.brother.gtds.action.aware.UserAware;
 import com.brother.gtds.model.User;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
@@ -36,10 +35,9 @@ public class LoginInterceptor implements Interceptor {
 			if(user != null)
 			{
 				//注入user到action
-				if(user instanceof Teacher)
+				if(action instanceof UserAware)
 				{
-					if(action instanceof TeacherAware)
-						((TeacherAware) action).setTeacher((Teacher) user);
+					((UserAware) action).setUser(user);
 				}
 				return arg0.invoke();
 			}

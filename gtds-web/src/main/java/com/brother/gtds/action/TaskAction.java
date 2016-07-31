@@ -18,6 +18,7 @@ import com.brother.gtds.action.aware.TeacherAware;
 import com.brother.gtds.model.Major;
 import com.brother.gtds.model.Task;
 import com.brother.gtds.model.Teacher;
+import com.brother.gtds.model.User;
 import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.MajorService;
 import com.brother.gtds.service.TaskService;
@@ -131,6 +132,11 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 		}
 		return "myTaskListAction";
 	}
+	//在saveOrUpdateTask()方法执行前执行
+	public void prepareSaveOrUpdateTask()
+	{
+		this.majors = majorService.findAllEntities();
+	}
 	
 	//删除课题，必须在截止日期前
 	public String deleteTask()
@@ -190,6 +196,19 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 		return taskService.getTotalCount(teacher) >= teacher.getMinCount();
 	}
 	
+	@Override  
+    public void addActionError(String anErrorMessage) {  
+        // 这里要先判断一下，是我们要替换的错误，才处理  
+        if (anErrorMessage.startsWith("the request was rejected because its size")) {  
+            //getText()方法是ActionSupport类中的方法，可以得到国际化文件中的信息  
+            super.addActionError(getText("struts.messages.error.file.too.large"));  
+            /*或者将该错误定义为fielderror级别：  
+             * super.addFieldError("fileTooLargeInfo", "文件的大小超出系统处理的范围");*/  
+        } else {// 否则按原来的方法处理  
+            super.addActionError(anErrorMessage);  
+        }  
+    }  
+	
 	public String getMajorQuery() {
 		return majorQuery;
 	}
@@ -231,8 +250,8 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	}
 
 	@Override
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
+	public void setUser(User user) {
+		this.teacher = (Teacher) user;
 	}
 
 	public List<Task> getMyTasks() {

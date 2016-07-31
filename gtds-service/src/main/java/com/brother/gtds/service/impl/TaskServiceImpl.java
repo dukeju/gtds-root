@@ -199,7 +199,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 		int count = 0;
 		for(Task t : tasks)
 		{
-			count += t.getCapacity();
+			if(t.isPass())
+				count += t.getCapacity() == null? 0 : t.getCapacity();
 		}
 		return count;
 	}
