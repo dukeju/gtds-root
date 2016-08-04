@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.brother.gtds.model">
+	<class name="Major" table="majors">
+		<id name="id" type="string" column="id" length="2">
+			<generator class="assigned"></generator>
+		</id>
+		
+		<property name="majorName" column="major_name" type="string" length="20"></property>
+
+	</class>
+</hibernate-mapping>

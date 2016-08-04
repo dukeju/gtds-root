@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.brother.gtds.model">
+	<class name="AnswerGroup" table="answerGroups">
+		<id name="id" type="integer" column="id">
+			<generator class="identity"></generator>
+		</id>
+		
+		<property name="time" column="answer_time" type="string" length="50"></property>
+		<property name="place" column="answer_place" type="string" length="50"></property>
+		<property name="pub" column="public" type="boolean"></property>
+		
+		<property name="recorder" column="recorder" type="string" length="10"></property>
+
+		<!--映射从 AnswerGroup 到  Teacher 的单向多对一关联关系  -->
+		<many-to-one name="tutor" class="Teacher" column="tutor_id"></many-to-one>
+		<!--映射从 AnswerGroup 到  Teacher 的单向多对一关联关系  -->
+		<many-to-one name="insepector" class="Teacher" column="insepector_id"></many-to-one>
+		<!--映射从 AnswerGroup 到  Teacher 的单向多对一关联关系 -->
+		<many-to-one name="head" class="Teacher" column="head_id"></many-to-one>
+		
+		<!--映射从 AnswerGroup 到  Teacher 的双向多对多关联关系  -->
+		<set name="tutors" table="teacher_group">
+			<key column="answerGroup_id"></key>
+			<many-to-many class="Teacher" column="teacher_id"></many-to-many>
+		</set>
+
+	</class>
+</hibernate-mapping>

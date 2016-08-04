@@ -1,0 +1,21 @@
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('01', '机电工程学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('02', '自动化学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('03', '材料与能源学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('04', '轻工业化工学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('05', '信息工程学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('06', '计算机学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('07', '土木与交通工程学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('08', '管理学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('09', '环境工程与科学学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('10', '外国语学院');
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('11', '应用数学学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('12', '物理与光电工程学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('13', '艺术设计学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('14', '政法学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('15', '建筑与城市规划学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('16', '商学院');  
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('17', '经济与贸易学院'); 
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('18', '华立学院');
+INSERT INTO `gtds`.`departments` (`id`, `name`) VALUES ('19', '继续教育学院');  
+
+UPDATE `gtds`.`departments` SET `expiry_date` = '2016-10-01' WHERE `id` = '08'; 

@@ -5,16 +5,19 @@
     
 <hibernate-mapping package="com.brother.gtds.model">
 	<class name="Thesis" table="thesises">
-		<id name="id" type="string" column="id" length="10">
-			<generator class="assigned"></generator>
+		<id name="id" type="integer" column="id">
+			<generator class="identity"></generator>
 		</id>
 		
 		<property name="title" column="title" type="string" length="50"></property>
 		<property name="explain" column="explains" type="string" length="200"></property>
-		<property name="date" column="completedDate" type="date" update="false"></property>
+		<property name="date" column="completed_date" type="date" update="false"></property>
+		<property name="path" column="path" type="string" length="100"></property>
 		
-		<!--映射从 Thesis 到  Student 的双向一对一关联关系，外键在对方表中  -->
-		<one-to-one name="student" property-ref="thesis"></one-to-one>
-
+		<property name="directorScore" column="director_score" type="integer"></property>
+		<property name="inspectorScore" column="inspector_score" type="integer"></property>
+		<property name="answerScore" column="answer_score" type="integer"></property>
+		<property name="summaryScore" column="summary_score" type="integer"></property>
+		
 	</class>
 </hibernate-mapping>
