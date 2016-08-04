@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.brother.gtds.model">
+	<class name="Admin" table="admins">
+		<id name="id" type="string" column="id" length="8">
+			<generator class="assigned"></generator>
+		</id>
+		
+		<property name="name" column="name" type="string" length="50"></property>
+		<property name="password" column="password" type="string" length="50"></property>
+		<property name="email" column="email" type="string" length="50"></property>
+		<property name="phone" column="phone" type="string" length="11"></property>
+
+		<!--映射从 Teacher 到  Department 的单向多对一关联关系，外键在该表中  -->
+		<many-to-one name="department" class="Department" column="dept_id"></many-to-one>
+
+	</class>
+</hibernate-mapping>

@@ -8,7 +8,7 @@ public class Task implements Serializable {
 
 	private static final long serialVersionUID = 6235557918956045420L;
 
-	private String id;
+	private Integer id;
 	//课题名称
 	private String name;
 	//课题要求
@@ -16,15 +16,31 @@ public class Task implements Serializable {
 	//发布时间
 	private Date publishDate;
 	//课题类型
-	private String type;
+	//0=工程设计， 1=理论研究， 2= 实验研究， 3=计算机软件研制， 4=综合，5=经管文， 6=法学， 7=艺术
+	private Integer type;
+	//课题来源
+	//科研项目 (0=国家级， 1=部级， 2=省级， 3=厅级， 4=市级， 5=校级），6=企业项目， 7=生产实际， 8=实际应用， 9=自选
+	private Integer source;
 	//面向专业
-	private String major;
-	//课题简介
-	private String introduction;
+	private Major major;
+	//是否通过审批，默认为true
+	private boolean pass = true;
 	//课题容量
 	private Integer capacity;
-	//课题由答辩小组指导老师来定
+	//课题由指导老师来定
 	private Teacher tutor;
+	//评审教师
+	private Teacher inspector;
+	
+	private String path;
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 
 	public String getName() {
 		return name;
@@ -50,22 +66,6 @@ public class Task implements Serializable {
 		this.tutor = tutor;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getIntroduction() {
-		return introduction;
-	}
-
-	public void setIntroduction(String introduction) {
-		this.introduction = introduction;
-	}
-
 	public Integer getCapacity() {
 		return capacity;
 	}
@@ -73,20 +73,45 @@ public class Task implements Serializable {
 	public void setCapacity(Integer capacity) {
 		this.capacity = capacity;
 	}
+	
+	public Integer getType() {
+		return type;
+	}
 
-	public String getMajor() {
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getSource() {
+		return source;
+	}
+
+	public void setSource(Integer source) {
+		this.source = source;
+	}
+
+	public Major getMajor() {
 		return major;
 	}
 
-	public void setMajor(String major) {
+	public void setMajor(Major major) {
 		this.major = major;
 	}
 
-	public String getId() {
+
+	public boolean isPass() {
+		return pass;
+	}
+
+	public void setPass(boolean pass) {
+		this.pass = pass;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -97,6 +122,13 @@ public class Task implements Serializable {
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
 	}
-	
+
+	public Teacher getInspector() {
+		return inspector;
+	}
+
+	public void setInspector(Teacher inspector) {
+		this.inspector = inspector;
+	}
 	
 }

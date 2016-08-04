@@ -1,0 +1,2 @@
+INSERT INTO `gtds`.`admins` (`id`, `name`, `password`, `email`, `phone`, `dept_id`) VALUES ('20040801', '林大诺', '159', 'danuo@163.com', '951', '08'); 
+INSERT INTO `gtds`.`admins` (`id`, `name`, `password`, `email`, `phone`, `dept_id`) VALUES ('20050202', '潘伟大', '357', 'weida@163.com', '753', '02'); 

@@ -17,7 +17,9 @@ public interface BaseDao<T> {
 	
 	//读操作
 	public T loadEntity(Integer id);
+	public T loadEntity(String id);
 	public T getEntity(Integer id);
+	public T getEntity(String id);
 	public List<T> findEntityByHQL(String hql, Object... objects);
 	//单值检索，要确保查询结果有且只有一条记录
 	public Object uniqueResult(String hql, Object... objects);

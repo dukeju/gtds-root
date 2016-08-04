@@ -69,8 +69,16 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 	public T loadEntity(Integer id) {
 		return (T) factory.getCurrentSession().load(clazz, id);
 	}
+	
+	public T loadEntity(String id) {
+		return (T) factory.getCurrentSession().load(clazz, id);
+	}
 
 	public T getEntity(Integer id) {
+		return (T) factory.getCurrentSession().get(clazz, id);
+	}
+	
+	public T getEntity(String id) {
 		return (T) factory.getCurrentSession().get(clazz, id);
 	}
 
@@ -108,5 +116,5 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 		}
 		return query.list();
 	}
-
+	
 }

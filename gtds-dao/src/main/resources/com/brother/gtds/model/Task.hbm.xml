@@ -5,20 +5,25 @@
     
 <hibernate-mapping package="com.brother.gtds.model">
 	<class name="Task" table="tasks">
-		<id name="id" type="string" column="id" length="6">
-			<generator class="assigned"></generator>
+		<id name="id" type="integer" column="id">
+			<generator class="identity"></generator>
 		</id>
 		
 		<property name="name" column="name" type="string" length="50"></property>
 		<property name="demand" column="demand" type="string" length="100"></property>
-		<property name="type" column="type" type="string" length="20"></property>
-		<property name="major" column="major" type="string" length="20"></property>
-		<property name="introduction" column="introduction" type="string" length="100"></property>
+		<property name="type" column="type" type="integer"></property>
 		<property name="capacity" column="capacity" type="integer"></property>
+		<property name="source" column="source" type="integer"></property>
 		<property name="publishDate" column="publish_date" type="date" update="false"></property>
+		<property name="pass" column="pass" type="boolean"></property>
+		<property name="path" column="path" type="string" length="50"></property>
 		
-		<!--映射从 Task 到  Teacher 的双向多对一关联关系，外键在对方表中  -->
+		<!--映射从 Task 到  Major 的单向多对一关联关系，外键在该表中  -->
+		<many-to-one name="major" class="Major" column="major_id"></many-to-one>
+		<!--映射从 Task 到  Teacher 的双向多对一关联关系，外键在该表中  -->
 		<many-to-one name="tutor" class="Teacher" column="tutor_id"></many-to-one>
+		<!--映射从 Task 到  Teacher 的单向多对一关联关系，外键在该表中  -->
+		<many-to-one name="inspector" class="Teacher" column="inspector_id"></many-to-one>		
 
 	</class>
 </hibernate-mapping>

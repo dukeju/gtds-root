@@ -5,29 +5,53 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.brother.gtds.model.Notice;
+import com.brother.gtds.model.User;
+import com.brother.gtds.service.NoticeService;
+import com.brother.gtds.service.UserService;
 import com.brother.gtds.utils.ImageUtils;
+import com.brother.gtds.utils.ValidationUtils;
 
 @Controller
 @Scope("prototype")
-public class LoginAction<User> extends BaseAction<User> {
+public class LoginAction extends BaseAction<User> implements SessionAware{
 
 	private static final long serialVersionUID = -1981575389161456655L;
 	
 	private static String SESSION_IDENTITYING_CODE = "identityingCode";
 	
+	@Resource
+	private UserService userService;
+	@Resource
+	private NoticeService noticeService;
+	
 	//用户输入的验证码
 	private String identity;
 	
 	private InputStream inputStream;
+	
+	private Map<String, Object> session;
+	
+	//身份，0-学生，1-教师，2-管理员
+	private Integer status;
+	
+	//去登陆
+	public String toLogin()
+	{
+		return "loginPage";
+	}
 
 	//登陆
 	public String doLogin()
@@ -35,10 +59,16 @@ public class LoginAction<User> extends BaseAction<User> {
 		return SUCCESS;
 	}
 	
-	//去登陆
-	public String toLogin()
+	//进行登陆校验，并且只校验 doLogin 方法
+	public void validateDoLogin()
 	{
-		return "loginPage";
+		User user = userService.validateUserInfo(model.getId(), model.getPassword(), status);
+		//登陆失败
+		if(user == null)
+			this.addActionError("用户名或者密码错误！");
+		//登陆成功，把用户放到session里
+		else
+			session.put("user", user);
 	}
 	
 	//显示验证码
@@ -93,7 +123,14 @@ public class LoginAction<User> extends BaseAction<User> {
 		{
 			inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
 		}
-		return "valiIden";
+		return "valiIdenAjax";
+	}
+	
+	//返回有关自己的通知的集合
+	public List<Notice> getMyNotices()
+	{
+		List<Notice> list = this.noticeService.getMyNotices((User) session.get("user"));
+		return ValidationUtils.validateColl(list)? list : null;
 	}
 	
 	public String getIdentity() {
@@ -107,4 +144,18 @@ public class LoginAction<User> extends BaseAction<User> {
 	public InputStream getInputStream() {
 		return inputStream;
 	}
+
+	@Override
+	public void setSession(Map<String, Object> arg0) {
+		this.session = arg0;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 }

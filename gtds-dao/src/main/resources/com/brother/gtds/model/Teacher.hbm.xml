@@ -5,7 +5,7 @@
     
 <hibernate-mapping package="com.brother.gtds.model">
 	<class name="Teacher" table="teachers">
-		<id name="id" type="string" column="id" length="6">
+		<id name="id" type="string" column="id" length="10">
 			<generator class="assigned"></generator>
 		</id>
 		
@@ -13,20 +13,25 @@
 		<property name="password" column="password" type="string" length="50"></property>
 		<property name="email" column="email" type="string" length="50"></property>
 		<property name="phone" column="phone" type="string" length="11"></property>
-		<property name="position" column="position" type="string" length="20"></property>
+		<property name="position" column="position" type="integer"></property>
 		<property name="research" column="research" type="string" length="50"></property>
+		<property name="type" column="type" type="integer"></property>
+		<property name="minCount" column="min_count" type="integer"></property>
+		<property name="maxCount" column="max_count" type="integer"></property>
 
-		<!--映射从 Teacher 到  Department 的单向多对一关联关系，外键在对方表中  -->
+		<!--映射从 Teacher 到  Department 的单向多对一关联关系，外键在该表中  -->
 		<many-to-one name="department" class="Department" column="dept_id"></many-to-one>
+		
 		<!--映射从 Teacher 到  Task 的双向一对多关联关系 ，设置 inverse 为 true 使 Teacher 不维护关系 -->
 		<set name="tasks" inverse="true">
 			<key column="tutor_id"></key>
 			<one-to-many class="Task"/>
 		</set>
-		<!--映射从 Teacher 到  ReplyGroup 的双向多对多关联关系  -->
-		<set name="groups" table="tutor_group">
-			<key column="tutor_id"></key>
-			<many-to-many class="ReplyGroup" column="replyGroup_id"></many-to-many>
+		
+		<!--映射从 Teacher 到  AnswerGroup 的双向多对多关联关系  -->
+		<set name="groups" table="teacher_group">
+			<key column="teacher_id"></key>
+			<many-to-many class="AnswerGroup" column="answerGroup_id"></many-to-many>
 		</set>
 
 	</class>

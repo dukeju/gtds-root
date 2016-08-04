@@ -36,11 +36,13 @@
 			<list>
 				<value>com/brother/gtds/model/Notice.hbm.xml</value>
 				<value>com/brother/gtds/model/Department.hbm.xml</value>
-				<value>com/brother/gtds/model/ReplyGroup.hbm.xml</value>
+				<value>com/brother/gtds/model/AnswerGroup.hbm.xml</value>
 				<value>com/brother/gtds/model/Student.hbm.xml</value>
 				<value>com/brother/gtds/model/Task.hbm.xml</value>
 				<value>com/brother/gtds/model/Teacher.hbm.xml</value>
 				<value>com/brother/gtds/model/Thesis.hbm.xml</value>
+				<value>com/brother/gtds/model/Major.hbm.xml</value>
+				<value>com/brother/gtds/model/Admin.hbm.xml</value>
 			</list>
 		</property>
 	</bean>

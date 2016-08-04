@@ -1,24 +1,122 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
-	 <!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
+	<!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
 	<constant name="struts.devMode" value="true" />
-	<constant name="struts.ui.theme" value="simple"/>
+	<constant name="struts.ui.theme" value="simple" />
 	<!-- 主要用于设置请求编码（默认值（UTF-8）） ，Head和Include标签的解析编码。 资源和配置文件的解析编码。 -->
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<!-- 当 struts的配置文件修改后，系统是否自动重新加载该文件，默认值为false（生产环境下使用），开发阶段最好打开 -->
 	<constant name="struts.configuration.xml.reload" value="true" />
 	<!-- 设置在class被修改时是否热加载，发布时要设置为false -->
-    <constant name="struts.convention.classes.reload" value="true"/>
-	
+	<constant name="struts.convention.classes.reload" value="true" />
+	<!-- struts2文件上传时，第一个关卡，默认为2M，当上传的文件大于2M时，  
+		    文件不上传并且后台会报错，将错误定义为actionerror级别，内容如下：  
+		    the request was rejected because its size (2722341) exceeds   
+		    the configured maximum (2097152)  
+		    这个错误不能被国家化，但是可以通过相应的action类继承ActionSupport类，  
+		    并且重写addActionError()方法修改错误信息。 -->  
+	<constant name="struts.multipart.maxSize" value="1048576" />
+
 	<package name="gtds" namespace="/" extends="struts-default">
+
+		<!-- 定义拦截器栈 -->
+		<interceptors>
+			<!-- 注册拦截器 -->
+			<interceptor name="loginInterceptor"
+				class="com.brother.gtds.action.interceptors.LoginInterceptor"></interceptor>
+			<!-- 定义拦截器栈 -->
+			<interceptor-stack name="gtdsStack">
+				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack">
+					<!-- 把 modelDriven.refreshModelBeforeResult 改为 true ，使modelDriven取得model以后的后处理中刷新model -->
+					<param name="modelDriven.refreshModelBeforeResult">true</param>
+					<!-- 文件大小  -->
+					<param name="fileUpload.maximumSize">1048576</param> 
+					<!-- 文件扩展名 -->
+					<param name="fileUpload.allowedExtensions">.doc, .docx</param>
+					<!-- 文件内容类型 -->
+					<param name="fileUpload.allowedTypes">application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<!-- 设置默认栈 -->
+		<default-interceptor-ref name="gtdsStack"></default-interceptor-ref>
+
+		<!-- 设置首页 -->
+		<default-action-ref name="index" />
+
+		<!-- 定义全局结果 -->
+		<global-results>
+			<result name="loginPage">/index.jsp</result>
+		</global-results>
+		
+		<!-- 首页引用的action -->
+		<action name="index" class="loginAction">
+			<result name="success" type="dispatcher">/success.jsp</result>
+		</action>
+
+		<!-- LoginAction -->
 		<action name="LoginAction_*" class="loginAction" method="{1}">
-			<result name="loginPage">/WEB-INF/jsp/index.jsp</result>
-			<result name="valiIden" type="stream">
+			<result name="valiIdenAjax" type="stream">
 				<param name="contenType">text/html</param>
 				<param name="inputName">inputStream</param>
 			</result>
-			<result name="success">/WEB-INF/jsp/success.jsp</result>
+			<result name="input">/index.jsp</result>
+			<result name="success" type="redirect">index</result>
+		</action>
+
+		<!-- StudentAction -->
+		<action name="StudentAction_*" class="studentAction" method="{1}">
+			<result name="studentListPage">/WEB-INF/jsp-ing/studentList.jsp</result>
+		</action>
+
+		<!-- teacherAction -->
+		<action name="TeacherAction_*" class="teacherAction" method="{1}">
+			<result name="teacherListPage">/WEB-INF/jsp-ing/teacherList.jsp</result>
+			<result name="teacherInfoPage">/WEB-INF/jsp-ing/teacherInfo.jsp</result>
+			<result name="editTypeAndCountPage">/WEB-INF/jsp-ing/editTypeAndCount.jsp</result>
+			<result name="teacherInfoAction" type="redirect">TeacherAction_getDetailInfo?teacherId=${teacherId}</result>
+			<result name="teacherTaskListPage">/WEB-INF/jsp-ing/teacherTaskList.jsp</result>
+		</action>
+
+		<!-- TaskAction -->
+		<action name="TaskAction_*" class="taskAction" method="{1}">
+			<result name="historyTasksListPage">/WEB-INF/jsp-ing/historyTasksList.jsp</result>
+			<result name="myTaskListPage">/WEB-INF/jsp-ing/myTaskList.jsp</result>
+			<result name="editTaskPage">/WEB-INF/jsp-ing/editTask.jsp</result>
+			<result name="input">/WEB-INF/jsp-ing/editTask.jsp</result>
+			<result name="myTaskListAction" type="redirect">TaskAction_myCurrentTasks</result>
+			<result name="validateNameAjax" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		
+		<!-- DownloadAction -->
+		<action name="DownloadAction" class="downloadAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/vnd.openxmlformats-officedocument.wordprocessingml.document</param>
+				<!-- 
+					contentDisposition默认是 inline（内联的), 比如说下载的文件是文本类型的，就直接在网页上打开，不能直接打开的才会打开下载框自己选择
+					attachment ：下载时会打开下载框
+					fileName="${fileName}" ：在这定义的名字是一个动态的，该名字是显示在下载框上的文件名字
+				 -->
+				<param name="contentDisposition">attachment;fileName="${fileName}"</param>
+				<param name="inputName">inputStream</param>
+				<!-- 指定下载文件时的缓冲大小 -->
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		
+		<!-- NoticeAction -->
+		<action name="NoticeAction_*" class="noticeAction" method="{1}">
+			<result name="ajax" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+			<result name="noticeInfoPage">/WEB-INF/jsp-ing/noticeInfo.jsp</result>
 		</action>
 	</package>
 </struts>    

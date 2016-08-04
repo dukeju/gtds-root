@@ -5,7 +5,7 @@
     
 <hibernate-mapping package="com.brother.gtds.model">
 	<class name="Student" table="students">
-		<id name="id" type="string" column="id" length="10">
+		<id name="id" type="string" column="id" length="12">
 			<generator class="assigned"></generator>
 		</id>
 		
@@ -13,17 +13,20 @@
 		<property name="password" column="password" type="string" length="50"></property>
 		<property name="email" column="email" type="string" length="50"></property>
 		<property name="phone" column="phone" type="string" length="11"></property>
-		<property name="major" column="major" type="string" length="20"></property>
 		<property name="cla" column="class" type="string" length="20"></property>
-		<property name="thesisGrade" column="thesis_grade" type="integer"></property>
-		<property name="replyGrade" column="reply_grade" type="integer"></property>
 
-		<!--映射从 Student 到  Department 的单向多对一关联关系，外键在对方表中  -->
+		<!--映射从 Student 到  Department 的单向多对一关联关系，外键在该表中  -->
 		<many-to-one name="department" class="Department" column="dept_id"></many-to-one>
-		<!--映射从 Student 到  ReplyGroup 的单向多对一关联关系，外键在该表中  -->
-		<many-to-one name="group" class="ReplyGroup" column="group_id" not-null="false"></many-to-one>
-		<!--映射从 Student 到  Thesis 的双向一对一关联关系，外键在该表中 -->
+		<!--映射从 Student 到  Major 的单向多对一关联关系，外键在该表中  -->
+		<many-to-one name="major" class="Major" column="major_id"></many-to-one>
+		<!--映射从 Student 到  AnswerGroup 的单向多对一关联关系，外键在该表中  -->
+		<many-to-one name="group" class="AnswerGroup" column="group_id" not-null="false"></many-to-one>
+		<!--映射从 Student 到  Thesis 的单向一对一关联关系，外键在该表中 -->
 		<many-to-one name="thesis" class="Thesis" column="thesis_id" unique="true" not-null="false"></many-to-one>
+		<!--映射从 Student 到  Teacher 的单向多对一关联关系，外键在该表中 -->
+		<many-to-one name="tutor" class="Teacher" column="tutor_id" not-null="false"></many-to-one>
+		<!--映射从 Student 到  Teacher 的单向多对一关联关系，外键在该表中 -->
+		<many-to-one name="inspector" class="Teacher" column="inspector_id" not-null="false"></many-to-one>
 		<!--映射从 Student 到  Task 的单向多对一关联关系，外键在该表中  -->
 		<many-to-one name="task" class="Task" column="task_id" not-null="false"></many-to-one>
 

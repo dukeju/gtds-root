@@ -10,11 +10,18 @@
 		</id>
 		
 		<property name="title" column="title" type="string" length="50"></property>
-		<property name="message" column="message" type="string" length="500"></property>
-		<property name="fileURL" column="file_URL" type="string" length="100"></property>
-		<property name="date" column="publish_date" type="date" update="false"></property>
+		<property name="message" column="message" type="text"></property>
+		<property name="filePath" column="file_path" type="string" length="100"></property>
+		<property name="date" column="publish_date" type="timestamp" update="false"></property>
+		<property name="receive" column="receive" type="boolean"></property>
 		
-		<!--映射从 Notice 到  Department 的单向多对一关联关系，外键在对方表中  -->
+		<!-- 单向多对一的关联关系，外键在该表中 -->
+		<many-to-one name="teaSender" class="Teacher" column="t_sender" not-null="false"></many-to-one>
+		<many-to-one name="adminSender" class="Admin" column="a_sender" not-null="false"></many-to-one>
+		<many-to-one name="teaReceiver" class="Teacher" column="t_receiver" not-null="false"></many-to-one>
+		<many-to-one name="stuReceiver" class="Student" column="s_receiver" not-null="false"></many-to-one>
+		
+		<!--映射从 Notice 到  Department 的单向多对一关联关系，外键在该表中  -->
 		<many-to-one name="dapartment" class="Department" column="dept_id" not-null="false"></many-to-one>
 
 	</class>
