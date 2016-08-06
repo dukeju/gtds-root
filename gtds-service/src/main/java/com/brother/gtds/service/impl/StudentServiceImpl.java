@@ -14,7 +14,7 @@ import com.brother.gtds.utils.ValidationUtils;
 @Service("studentService")
 public class StudentServiceImpl extends BaseServiceImpl<Student> implements
 		StudentService {
-
+	
 	@Resource(name="studentDao")
 	public void setDao(BaseDao<Student> dao)
 	{
@@ -67,11 +67,6 @@ public class StudentServiceImpl extends BaseServiceImpl<Student> implements
 		{
 			s.getDepartment().getName();
 			s.getMajor().getMajorName();
-//			s.getTutor().getName();
-//			s.getTask().getName();
-//			s.getThesis().getTitle();
-//			s.getInspector().getName();
-//			s.getGroup().getPlace();
 		}
 		return list;
 	}

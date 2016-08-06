@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.brother.gtds.model.Task;
 import com.brother.gtds.model.Teacher;
+import com.brother.gtds.service.page.PageBean;
 
 public interface TaskService extends BaseService<Task> {
 
@@ -33,5 +34,13 @@ public interface TaskService extends BaseService<Task> {
 
 	//获得本届本教师的课题容量总和
 	int getTotalCount(Teacher teacher);
+
+	//获得我的选择的课题
+	PageBean<Task> getChoicePage(String mId, String tutorQuery, String sId, int pageNum, int pageSize);
+
+	//返回可选择的导师
+	List<Teacher> getChoiceTutors(String mId);
+
+	Task getTask(Integer taskId);
 	
 }

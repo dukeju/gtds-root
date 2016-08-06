@@ -10,6 +10,8 @@
   </head>
   
   <body>
+  	<s:a action="LoginAction_toLogin">登陆</s:a>
+  	<br>
     success!
     <br/>
     ${sessionScope.user.name }
@@ -46,5 +48,7 @@
     <a href="TaskAction_myCurrentTasks">我的课题</a>
     <br>
     <a href="TeacherAction_showTeacherTaskSituation">教师出题情况</a>
+    <br>
+    <a href="TaskAction_showChoiceTasks">选题列表</a>
   </body>
 </html>

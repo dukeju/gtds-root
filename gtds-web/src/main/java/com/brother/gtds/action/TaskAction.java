@@ -14,20 +14,23 @@ import org.apache.struts2.util.ServletContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.brother.gtds.action.aware.TeacherAware;
+import com.brother.gtds.action.aware.UserAware;
 import com.brother.gtds.model.Major;
+import com.brother.gtds.model.Student;
 import com.brother.gtds.model.Task;
 import com.brother.gtds.model.Teacher;
 import com.brother.gtds.model.User;
 import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.MajorService;
+import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
+import com.brother.gtds.service.page.PageBean;
 import com.brother.gtds.utils.FileUtils;
 import com.brother.gtds.utils.ValidationUtils;
 
 @Controller
 @Scope("prototype")
-public class TaskAction extends BaseAction<Task> implements TeacherAware, ServletContextAware, RequestAware{
+public class TaskAction extends BaseAction<Task> implements UserAware, ServletContextAware, RequestAware{
 
 	private static final long serialVersionUID = 6887834321049118028L;
 	
@@ -37,15 +40,21 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	private MajorService majorService;
 	@Resource
 	private DepartmentService departmentService;
+	@Resource
+	private StudentTaskService studentTaskService;
 	
 	private InputStream inputStream;
 	
-	//接收Teacher
-	private Teacher teacher;
+	//接收User
+	private User user;
 	
 	private Integer taskId;
 	private String taskName;
+	private int pageNum;
+	private int pageSize = 5;
 	
+	//导师的ID
+	private String tutorQuery;
 	//面向的专业
 	private String majorQuery;
 	//查看近几年的课题，最大值为3. 0表示本届
@@ -76,6 +85,7 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	//到达我的课题页面（只显示本届的）
 	public String myCurrentTasks()
 	{
+		Teacher teacher = (Teacher) user;
 		request.put("minCount", teacher.getMinCount());
 		request.put("maxCount", teacher.getMaxCount());
 		
@@ -86,6 +96,7 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	//到达我的课题页面（显示全部的）
 	public String myAllTasks()
 	{
+		Teacher teacher = (Teacher) user;
 		request.put("minCount", teacher.getMinCount());
 		request.put("maxCount", teacher.getMaxCount());
 		
@@ -112,7 +123,7 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	{
 		if(this.isEditable(model.getId()))
 		{
-			model.setTutor(teacher);
+			model.setTutor((Teacher) user);
 			
 			if(file != null)
 			{
@@ -163,7 +174,7 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	//指定课题是否可编辑的
 	public boolean isEditable(Integer tId)
 	{
-		if(taskService.isEditableTask(teacher.getDepartment().getId(), tId))
+		if(taskService.isEditableTask(user.getDepartment().getId(), tId))
 			return true;
 		return false;
 	}
@@ -177,7 +188,7 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	public String validateName() throws Exception
 	{
 		//如果课题名称有效
-		if(taskService.validateName(taskId, taskName, teacher))
+		if(taskService.validateName(taskId, taskName, (Teacher) user))
 			inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
 		else
 			inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
@@ -187,12 +198,13 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	//除去指定课题外的最大课题剩余容量
 	public int getRestCapacity(Integer id)
 	{
-		return taskService.getRestCapacity(id, teacher);
+		return taskService.getRestCapacity(id, (Teacher) user);
 	}
 	
 	//是否超过导师的最小指导人数
 	public boolean beyondMinCount()
 	{
+		Teacher teacher = (Teacher) user;
 		return taskService.getTotalCount(teacher) >= teacher.getMinCount();
 	}
 	
@@ -208,6 +220,49 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
             super.addActionError(anErrorMessage);  
         }  
     }  
+	
+	//显示所有可选的课题
+	public String showChoiceTasks()
+	{
+		Student student = (Student) user;
+		PageBean<Task> taskPage = this.taskService.getChoicePage(student.getMajor().getId(), tutorQuery, student.getId(), pageNum, pageSize);
+		this.request.put("taskPage", taskPage);
+		this.request.put("selectedTask", studentTaskService.getSelectedTask(student.getId()));
+		return "choiceTasksPage";
+	}
+	
+	//返回可选择的导师
+	public List<Teacher> getChoiceTutors()
+	{
+		List<Teacher> choiceTutors = this.taskService.getChoiceTutors(((Student) user).getMajor().getId());
+		Teacher all = new Teacher();
+		all.setId("00");
+		all.setName("全部");
+		choiceTutors.add(0, all);
+		return choiceTutors;
+	}
+	
+	//显示课题详细信息
+	public String showTaskInfo()
+	{
+		this.model = taskService.getTask(taskId);
+		request.put("teacher", model.getTutor());
+		request.put("currentPage", pageNum);
+		request.put("pageSize", pageSize);
+		return "taskInfoPage";
+	}
+	
+	//返回选择了该课题的人数
+	public Long getSelectedCount(int taskId)
+	{
+		return studentTaskService.getSelectedCount(taskId);
+	}
+	
+	//返回指定课题是否为我的已选课题
+	public boolean isMySelectedTask(Integer taskId)
+	{
+		return this.studentTaskService.isMySelectedTask(user.getId(), taskId);
+	}
 	
 	public String getMajorQuery() {
 		return majorQuery;
@@ -251,7 +306,7 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 
 	@Override
 	public void setUser(User user) {
-		this.teacher = (Teacher) user;
+		this.user = user;
 	}
 
 	public List<Task> getMyTasks() {
@@ -306,6 +361,30 @@ public class TaskAction extends BaseAction<Task> implements TeacherAware, Servle
 	@Override
 	public void setRequest(Map<String, Object> arg0) {
 		request = arg0;
+	}
+
+	public String getTutorQuery() {
+		return tutorQuery;
+	}
+
+	public int getPageNum() {
+		return pageNum;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setTutorQuery(String tutorQuery) {
+		this.tutorQuery = tutorQuery;
+	}
+
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 
 }

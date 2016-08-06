@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.brother.gtds.model">
+	<class name="StudentTask" table="student_task">
+		<id name="id" type="integer" column="id">
+			<generator class="identity"></generator>
+		</id>
+		
+		<!-- 单向一对一 -->
+		<many-to-one name="student" class="Student" column="student_id" not-null="true" unique="true"></many-to-one>
+		<many-to-one name="task" class="Task" column="task_id" not-null="true"></many-to-one>
+		<property name="pass" column="pass" type="boolean" not-null="true"></property>
+
+		<many-to-one name="tutor" class="Teacher" column="tutor_id" not-null="false"></many-to-one>
+		<many-to-one name="thesis" class="Thesis" column="thesis_id" unique="true" not-null="false"></many-to-one>
+		<many-to-one name="inspector" class="Teacher" column="inspector_id" not-null="false"></many-to-one>
+
+	</class>
+</hibernate-mapping>

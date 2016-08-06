@@ -43,13 +43,17 @@
     		<td>编辑</td>
     		<td>删除</td>
     	</tr> 
+    	<s:set value="#{0:'工程设计',1:'理论研究',2:'实验研究',3:'计算机软件研制',4:'综合',5:'经管文',6:'法学',7:'艺术'}"
+				var="type"></s:set>
+		<s:set value="#{0:'国家级科研项目',1:'部级科研项目',2:'省级科研项目',3:'厅级科研项目',4:'市级科研项目',5:'校级科研项目',6:'企业项目',7:'生产实际',8:'实际应用',9:'自选'}"
+				var="source"></s:set>
     	<s:iterator value="%{myTasks}" status="st">
     		<tr>
     			<td><s:property value="#st.index + 1" /></td>
     			<td><s:property value="name"/></td>  
     			<td><s:property value="demand"/></td>  
-    			<td><s:property value="type"/></td>
-    			<td><s:property value="source"/></td>  
+    			<td><s:property value="%{#type[type]}"/></td>
+    			<td><s:property value="%{#source[source]}"/></td>  
     			<td><s:property value="major.majorName"/></td>
     			<td><s:property value="capacity"/></td>
     			<td><s:property value="%{pass?'通过':'未通过'}" /></td>

@@ -117,4 +117,24 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 		return query.list();
 	}
 	
+	public List<T> findByPage(int offset, int pageSize, String hql, Object...objects)
+	{
+		Query query = factory.getCurrentSession().createQuery(hql);
+		for(int i=0; i<objects.length; i++)
+		{
+			query.setParameter(i, objects[i]);
+		}
+		query = query.setFirstResult(offset).setMaxResults(pageSize);
+		return query.list();
+	}
+	
+	public Integer getAllRowCount(String hql, Object...objects)
+	{
+		Query query = factory.getCurrentSession().createQuery(hql);
+		for(int i=0; i<objects.length; i++)
+		{
+			query.setParameter(i, objects[i]);
+		}
+		return query.list().size();
+	}
 }

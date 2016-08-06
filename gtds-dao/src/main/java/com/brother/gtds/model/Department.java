@@ -10,8 +10,11 @@ public class Department implements Serializable {
 
 	private String id;
 	private String name;
-	//出论文课题的截止日期
-	private Date expiryDate;
+	//拟定课题的截止日期
+	private Date proposeExpiry;
+	private Date selectBegin;
+	//学生选题的截止日期
+	private Date selectEnd;
 
 	public Department() {
 		super();
@@ -38,12 +41,28 @@ public class Department implements Serializable {
 		this.name = name;
 	}
 
-	public Date getExpiryDate() {
-		return expiryDate;
+	public Date getProposeExpiry() {
+		return proposeExpiry;
 	}
 
-	public void setExpiryDate(Date expiryDate) {
-		this.expiryDate = expiryDate;
+	public void setProposeExpiry(Date proposeExpiry) {
+		this.proposeExpiry = proposeExpiry;
+	}
+
+	public Date getSelectBegin() {
+		return selectBegin;
+	}
+
+	public Date getSelectEnd() {
+		return selectEnd;
+	}
+
+	public void setSelectBegin(Date selectBegin) {
+		this.selectBegin = selectBegin;
+	}
+
+	public void setSelectEnd(Date selectEnd) {
+		this.selectEnd = selectEnd;
 	}
 
 }

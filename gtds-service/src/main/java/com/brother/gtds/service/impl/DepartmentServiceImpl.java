@@ -22,10 +22,32 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
 
 	//返回是否超过截止出题日期
 	@Override
-	public boolean beyondExpiryDate(String departmentId) {
+	public boolean beyondProposeExpiry(String departmentId) {
 		Department d = this.getEntity(departmentId);
 		//如果超过了截止日期
-		if(d.getExpiryDate().before(new Date()))
+		if(d.getProposeExpiry() != null && d.getProposeExpiry().before(new Date()))
+			return true;
+		else
+			return false;
+	}
+
+	//返回是否早于学生选题时间
+	@Override
+	public boolean beforeSelectBegin(String dId) {
+		Department d = this.getEntity(dId);
+		//如果早于选题日期
+		if(d.getSelectBegin() != null && d.getSelectBegin().after(new Date()))
+			return true;
+		else
+			return false;
+	}
+
+	//返回是否超过学生选题日期
+	@Override
+	public boolean beyondSelectEnd(String dId) {
+		Department d = this.getEntity(dId);
+		//如果早于选题日期
+		if(d.getSelectEnd() != null && d.getSelectEnd().before(new Date()))
 			return true;
 		else
 			return false;
