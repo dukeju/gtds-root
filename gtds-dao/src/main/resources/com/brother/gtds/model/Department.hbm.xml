@@ -10,7 +10,12 @@
 		</id>
 		
 		<property name="name" column="name" type="string" length="20"></property>
-		<property name="expiryDate" column="expiry_date" type="date"></property>
+		
+		<property name="stuProposeBegin" column="stu_propose_begin" type="date"></property>
+		<property name="proposeBegin" column="propose_begin" type="date"></property>
+		<property name="proposeExpiry" column="propose_expiry" type="date"></property>
+		<property name="selectBegin" column="select_begin" type="date"></property>
+		<property name="selectEnd" column="select_end" type="date"></property>
 		
 	</class>
 </hibernate-mapping>

@@ -114,7 +114,7 @@
     		<tr>
     			<td>身份</td>
     			<td>
-    				<s:radio list="#{0:'学生',1:'教师',2:'管理员'}" name="status"></s:radio>
+    				<s:radio list="#{0:'学生',1:'教师',2:'管理员'}" name="status" value="1"></s:radio>
     			</td>
     		</tr>
     		<tr>

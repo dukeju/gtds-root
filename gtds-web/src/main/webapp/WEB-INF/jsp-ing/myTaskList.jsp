@@ -38,26 +38,44 @@
     		<td>来源</td>
     		<td>面向专业</td>
     		<td>容量</td>
+    		<td>是否学生自拟</td>
     		<td>是否通过评审</td>
     		<td>发布时间</td>
     		<td>编辑</td>
     		<td>删除</td>
     	</tr> 
-    	<s:iterator value="%{myTasks}" status="st">
+    	<s:set value="#{0:'工程设计',1:'理论研究',2:'实验研究',3:'计算机软件研制',4:'综合',5:'经管文',6:'法学',7:'艺术'}"
+				var="type"></s:set>
+		<s:set value="#{0:'国家级科研项目',1:'部级科研项目',2:'省级科研项目',3:'厅级科研项目',4:'市级科研项目',5:'校级科研项目',6:'企业项目',7:'生产实际',8:'实际应用',9:'自选'}"
+				var="source"></s:set>
+    	<s:iterator value="%{tasks}" status="st">
     		<tr>
     			<td><s:property value="#st.index + 1" /></td>
     			<td><s:property value="name"/></td>  
     			<td><s:property value="demand"/></td>  
-    			<td><s:property value="type"/></td>
-    			<td><s:property value="source"/></td>  
+    			<td><s:property value="%{#type[type]}"/></td>
+    			<td><s:property value="%{#source[source]}"/></td>  
     			<td><s:property value="major.majorName"/></td>
     			<td><s:property value="capacity"/></td>
+    			<td>
+    	 			<s:set value="student.id" var="sId"></s:set>
+    				<s:if test="#sId != null">
+    					是（<s:a action="StudentAction_studentInfo?idQuery=%{student.id}"><s:property value="student.name" /></s:a>）
+    				</s:if>
+    				<s:else>否</s:else>
+    			</td>
     			<td><s:property value="%{pass?'通过':'未通过'}" /></td>
     			<td><s:date name="publishDate" format="yyyy-MM-dd"/></td>
     	 		<s:set value="isEditable(id)" var="editable"></s:set>
     	 		<s:if test="#editable">
-	    			<td><s:a action="TaskAction_editTask?taskId=%{id}">编辑</s:a></td>
-    				<td><s:a action="TaskAction_deleteTask?taskId=%{id}">删除</s:a></td>
+    	 			<s:if test="#sId == null">
+		    			<td><s:a action="TaskAction_editTask?taskId=%{id}">编辑</s:a></td>
+    					<td><s:a action="TaskAction_deleteTask?taskId=%{id}">删除</s:a></td>
+    	 			</s:if>
+	    			<s:else>
+		    			<td></td>
+		    			<td></td>
+	    			</s:else> 
     			</s:if>
     			<s:else>
 	    			<td></td>

@@ -1,26 +1,33 @@
 package com.brother.gtds.action;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.struts2.interceptor.RequestAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.brother.gtds.action.aware.StudentAware;
+import com.brother.gtds.action.aware.UserAware;
 import com.brother.gtds.model.Department;
 import com.brother.gtds.model.Major;
 import com.brother.gtds.model.Student;
-import com.brother.gtds.model.Task;
+import com.brother.gtds.model.StudentTask;
+import com.brother.gtds.model.Teacher;
 import com.brother.gtds.model.User;
 import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.MajorService;
 import com.brother.gtds.service.StudentService;
+import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
+import com.brother.gtds.service.TeacherService;
 
 @Controller
 @Scope("prototype")
-public class StudentAction extends BaseAction<Student> implements StudentAware {
+public class StudentAction extends BaseAction<Student> implements UserAware, RequestAware {
 
 	private static final long serialVersionUID = 7919543107393901986L;
 
@@ -32,9 +39,15 @@ public class StudentAction extends BaseAction<Student> implements StudentAware {
 	private DepartmentService departmentService;
 	@Resource
 	private TaskService taskService;
+	@Resource
+	private StudentTaskService studentTaskService;
+	@Resource
+	private TeacherService teacherService;
 	
-	private Student user;
+	private User user;
+	private Map<String, Object> request;
 	
+	private Integer taskId;
 	//查询条件
 	private String idQuery;
 	private String nameQuery;
@@ -48,8 +61,9 @@ public class StudentAction extends BaseAction<Student> implements StudentAware {
 	private List<Student> students;
 	private List<Major> majors;
 	private List<Department> departments;
+	private List<StudentTask> studentTasks;
 	
-	private List<Task> choiceTasks;
+	private InputStream inputStream;
 	
 	//显示符合条件的学生信息
 	public String showStudents()
@@ -66,13 +80,107 @@ public class StudentAction extends BaseAction<Student> implements StudentAware {
 		return "studentListPage";
 	}
 	
-	//显示所有可选的课题
-	public String showChoiceTasks()
+	//选择课程
+	public String selectTask()
 	{
-		this.choiceTasks = this.taskService.findHistoryPassTasks(user.getMajor().getId(), 0);
-		return "choiceTasksPage";
+		try
+		{
+			//如果还没到选择课题时间
+			if(departmentService.beforeSelectBegin(user.getDepartment().getId()))
+				inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
+			//如果已经超过了选择课题时间
+			else if(departmentService.beyondSelectEnd(user.getDepartment().getId()))
+				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
+			//如果已经选过课题了
+			else if(studentTaskService.isSelected((Student) user))
+			{
+				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
+			}
+			else
+			{
+				this.studentTaskService.selectTask(taskId, (Student) user);
+				inputStream = new ByteArrayInputStream("3".getBytes("utf-8"));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return "ajax";
 	}
-
+	
+	//返回选择了该课题的人数
+	public Long getSelectedCount(int taskId)
+	{
+		return studentTaskService.getSelectedCount(taskId);
+	}
+	
+	//退选课题
+	public String unselectTask()
+	{
+		try
+		{
+			//如果已经超过了选择课题时间
+			if(departmentService.beyondSelectEnd(user.getDepartment().getId()))
+				inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
+			//如果已经被导师确认通过
+			else if(studentTaskService.isPassed(taskId, (Student)user))
+				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
+			else
+			{
+				this.studentTaskService.unselectTask(taskId, user.getId());
+				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return "ajax";
+	}
+	
+	//是否超过自拟课题的截止日期（选题截止日期的前一天）
+	public String beyongStuProposeExpiry()
+	{
+		try
+		{
+			//如果还没到学生自拟课题时间
+			if(departmentService.beforeStuProposeBegin(user.getDepartment().getId()))
+				inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
+			//如果已经超过了自拟课题时间
+			else if(this.departmentService.beyondStuProposeExpiry(user.getDepartment().getId()))
+				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
+			else
+				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return "ajax";
+	}
+	
+	//返回学生信息页面
+	public String studentInfo()
+	{
+		this.model = studentService.getStudent(idQuery);
+		return "studentInfoPage";
+	}
+	
+	//返回学生申请课题页面
+	public String showMyStudentTasks()
+	{
+		this.studentTasks = this.studentTaskService.getMyStudentTasks((Teacher)user);
+		return "myStudentTaskListPage";
+	}
+	
+	//批量更新学生选课情况
+	public String batchUpdateStuTasks()
+	{
+		this.studentTaskService.batchUpdateStuTasks(studentTasks);
+		return "myStudentTaskListAction";
+	}
+	
 	public String getIdQuery() {
 		return idQuery;
 	}
@@ -145,17 +253,38 @@ public class StudentAction extends BaseAction<Student> implements StudentAware {
 		this.departments = departments;
 	}
 
-	public List<Task> getChoiceTasks() {
-		return choiceTasks;
+	@Override
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public void setChoiceTasks(List<Task> choiceTasks) {
-		this.choiceTasks = choiceTasks;
+	public Integer getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
+	}
+
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
 	}
 
 	@Override
-	public void setUser(User user) {
-		this.user = (Student) user;
+	public void setRequest(Map<String, Object> request) {
+		this.request = request;
 	}
-	
+
+	public List<StudentTask> getStudentTasks() {
+		return studentTasks;
+	}
+
+	public void setStudentTasks(List<StudentTask> studentTasks) {
+		this.studentTasks = studentTasks;
+	}
+
 }

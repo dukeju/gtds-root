@@ -8,71 +8,21 @@ public class Student extends User {
 	private String cla;
 	//专业
 	private Major major;
-	//论文
-	private Thesis thesis;
-	//课题
-	private Task task;
-	//指导老师
-	private Teacher tutor;
-	//评阅老师，不能是指导老师，副教授及副教授以上
-	private Teacher inspector;
-	//答辩小组
-	private AnswerGroup group;
-	
-	public Teacher getInspector() {
-		return inspector;
-	}
-
-	public void setInspector(Teacher inspector) {
-		this.inspector = inspector;
-	}
-
-	public AnswerGroup getGroup() {
-		return group;
-	}
-
-	public void setGroup(AnswerGroup group) {
-		this.group = group;
-	}
 
 	public String getCla() {
 		return cla;
-	}
-
-	public void setCla(String cla) {
-		this.cla = cla;
 	}
 
 	public Major getMajor() {
 		return major;
 	}
 
+	public void setCla(String cla) {
+		this.cla = cla;
+	}
+
 	public void setMajor(Major major) {
 		this.major = major;
-	}
-
-	public Thesis getThesis() {
-		return thesis;
-	}
-
-	public void setThesis(Thesis thesis) {
-		this.thesis = thesis;
-	}
-
-	public Task getTask() {
-		return task;
-	}
-
-	public void setTask(Task task) {
-		this.task = task;
-	}
-
-	public Teacher getTutor() {
-		return tutor;
-	}
-
-	public void setTutor(Teacher tutor) {
-		this.tutor = tutor;
 	}
 
 }

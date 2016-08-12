@@ -19,16 +19,6 @@
 		<many-to-one name="department" class="Department" column="dept_id"></many-to-one>
 		<!--映射从 Student 到  Major 的单向多对一关联关系，外键在该表中  -->
 		<many-to-one name="major" class="Major" column="major_id"></many-to-one>
-		<!--映射从 Student 到  AnswerGroup 的单向多对一关联关系，外键在该表中  -->
-		<many-to-one name="group" class="AnswerGroup" column="group_id" not-null="false"></many-to-one>
-		<!--映射从 Student 到  Thesis 的单向一对一关联关系，外键在该表中 -->
-		<many-to-one name="thesis" class="Thesis" column="thesis_id" unique="true" not-null="false"></many-to-one>
-		<!--映射从 Student 到  Teacher 的单向多对一关联关系，外键在该表中 -->
-		<many-to-one name="tutor" class="Teacher" column="tutor_id" not-null="false"></many-to-one>
-		<!--映射从 Student 到  Teacher 的单向多对一关联关系，外键在该表中 -->
-		<many-to-one name="inspector" class="Teacher" column="inspector_id" not-null="false"></many-to-one>
-		<!--映射从 Student 到  Task 的单向多对一关联关系，外键在该表中  -->
-		<many-to-one name="task" class="Task" column="task_id" not-null="false"></many-to-one>
 
 	</class>
 </hibernate-mapping>

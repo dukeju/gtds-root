@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import com.brother.gtds.dao.BaseDao;
 import com.brother.gtds.service.BaseService;
+import com.brother.gtds.service.page.PageBean;
 import com.brother.gtds.utils.ReflectionUtils;
 
 /**
@@ -85,6 +86,17 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
 	public List<T> executeSQLQuery(Class<?> clazz, String sql,
 			Object... objects) {
 		return dao.executeSQLQuery(clazz, sql, objects);
+	}
+	
+	public PageBean<T> getPageBean(int pageNum, int pageSize, String hql, Object...objects)
+	{
+		PageBean<T> page = new PageBean<T>();
+		page.setCurrentPage(pageNum);
+		page.setPageSize(pageSize);
+		page.setRows(this.dao.getAllRowCount(hql, objects));
+		page.setList(this.dao.findByPage(page.getCurrentPageOffset(), pageSize, hql, objects));
+		
+		return page;
 	}
 
 }

@@ -10,6 +10,9 @@
 		</id>
 		
 		<property name="majorName" column="major_name" type="string" length="20"></property>
+		
+		<!-- 单向多对一 -->
+		<many-to-one name="department" column="dept_id" class="Department"></many-to-one>
 
 	</class>
 </hibernate-mapping>

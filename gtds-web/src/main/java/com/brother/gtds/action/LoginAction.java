@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -17,12 +16,10 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.brother.gtds.model.Notice;
 import com.brother.gtds.model.User;
 import com.brother.gtds.service.NoticeService;
 import com.brother.gtds.service.UserService;
 import com.brother.gtds.utils.ImageUtils;
-import com.brother.gtds.utils.ValidationUtils;
 
 @Controller
 @Scope("prototype")
@@ -123,14 +120,13 @@ public class LoginAction extends BaseAction<User> implements SessionAware{
 		{
 			inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
 		}
-		return "valiIdenAjax";
+		return "ajax";
 	}
 	
-	//返回有关自己的通知的集合
-	public List<Notice> getMyNotices()
+	//返回是否有未读消息
+	public boolean hasUnreadNotice()
 	{
-		List<Notice> list = this.noticeService.getMyNotices((User) session.get("user"));
-		return ValidationUtils.validateColl(list)? list : null;
+		return this.noticeService.hasUnreadNotice((User)session.get("user"));
 	}
 	
 	public String getIdentity() {

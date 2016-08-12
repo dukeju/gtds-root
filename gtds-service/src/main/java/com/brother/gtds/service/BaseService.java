@@ -2,6 +2,8 @@ package com.brother.gtds.service;
 
 import java.util.List;
 
+import com.brother.gtds.service.page.PageBean;
+
 /**
  *基本业务逻辑 
  *接口
@@ -28,4 +30,7 @@ public interface BaseService<T> {
 	public Object uniqueResult(String hql, Object... objects);
 	// 执行sql语句，可以通过制定clazz是否为空指定是否封装为实体
 	public List<T> executeSQLQuery(Class<?> clazz, String sql, Object... objects);
+	
+	//返回处理分页的类
+	public PageBean<T> getPageBean(int pageNum, int pageSize, String hql, Object...objects);
 }

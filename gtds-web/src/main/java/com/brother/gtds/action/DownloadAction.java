@@ -25,6 +25,7 @@ public class DownloadAction extends BaseAction implements ServletContextAware {
 	 * 7-广东工业大学本科生毕业设计（论文）任务书.docx
 	 * 8-广东工业大学本科生毕业设计（论文）指导情况记录表.docx
 	 * 9-广东工业大学本科生毕业设计（论文）中期检查表.docx
+	 * 10-广东工业大学本科生毕业设计（论文）学生拟题审批表.docx
 	 */
 	private Integer number;
 	private String fileName;
@@ -46,6 +47,7 @@ public class DownloadAction extends BaseAction implements ServletContextAware {
 			case 7 : fileName = "广东工业大学本科生毕业设计（论文）任务书.docx"; break;
 			case 8 : fileName = "广东工业大学本科生毕业设计（论文）指导情况记录表.docx"; break;
 			case 9 : fileName = "广东工业大学本科生毕业设计（论文）中期检查表.docx"; break;
+			case 10 : fileName = "广东工业大学本科生毕业设计（论文）学生拟题审批表.docx"; break;
 		}
 		inputStream = sc.getResourceAsStream("/相关表格/" + fileName);
 		//解解乱码 ，iso-8859-1是JAVA网络传输使用的标准字符集

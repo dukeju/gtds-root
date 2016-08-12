@@ -27,10 +27,12 @@ public class Task implements Serializable {
 	private boolean pass = true;
 	//课题容量
 	private Integer capacity;
-	//课题由指导老师来定
+	//课题由指导老师来定（或者学生自拟课题指定导师）
 	private Teacher tutor;
 	//评审教师
 	private Teacher inspector;
+	//自拟课题的学生
+	private Student student;
 	
 	private String path;
 
@@ -129,6 +131,14 @@ public class Task implements Serializable {
 
 	public void setInspector(Teacher inspector) {
 		this.inspector = inspector;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 	
 }

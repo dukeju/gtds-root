@@ -8,6 +8,7 @@ public class Major implements Serializable {
 	
 	private String id;
 	private String majorName;
+	private Department department;
 
 	public Major() {
 		super();
@@ -32,6 +33,14 @@ public class Major implements Serializable {
 
 	public void setMajorName(String majorName) {
 		this.majorName = majorName;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 }

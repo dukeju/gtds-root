@@ -8,7 +8,7 @@ import com.brother.gtds.dao.BaseDao;
 import com.brother.gtds.model.Admin;
 import com.brother.gtds.service.AdminService;
 
-@Service
+@Service("adminService")
 public class AdminServiceImpl extends BaseServiceImpl<Admin> implements
 		AdminService {
 

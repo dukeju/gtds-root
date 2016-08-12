@@ -18,6 +18,7 @@
 		<!-- 单向多对一的关联关系，外键在该表中 -->
 		<many-to-one name="teaSender" class="Teacher" column="t_sender" not-null="false"></many-to-one>
 		<many-to-one name="adminSender" class="Admin" column="a_sender" not-null="false"></many-to-one>
+		<many-to-one name="stuSender" class="Student" column="s_sender" not-null="false"></many-to-one>
 		<many-to-one name="teaReceiver" class="Teacher" column="t_receiver" not-null="false"></many-to-one>
 		<many-to-one name="stuReceiver" class="Student" column="s_receiver" not-null="false"></many-to-one>
 		

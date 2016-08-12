@@ -14,7 +14,7 @@ import com.brother.gtds.utils.ValidationUtils;
 @Service("studentService")
 public class StudentServiceImpl extends BaseServiceImpl<Student> implements
 		StudentService {
-
+	
 	@Resource(name="studentDao")
 	public void setDao(BaseDao<Student> dao)
 	{
@@ -67,13 +67,17 @@ public class StudentServiceImpl extends BaseServiceImpl<Student> implements
 		{
 			s.getDepartment().getName();
 			s.getMajor().getMajorName();
-//			s.getTutor().getName();
-//			s.getTask().getName();
-//			s.getThesis().getTitle();
-//			s.getInspector().getName();
-//			s.getGroup().getPlace();
 		}
 		return list;
+	}
+
+	//返回指定学生，已解决懒加载
+	@Override
+	public Student getStudent(String idQuery) {
+		Student s = this.getEntity(idQuery);
+		s.getMajor().getMajorName();
+		s.getDepartment().getName();
+		return s;
 	}
 
 }

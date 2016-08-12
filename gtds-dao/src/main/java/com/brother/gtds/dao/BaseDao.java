@@ -25,4 +25,8 @@ public interface BaseDao<T> {
 	public Object uniqueResult(String hql, Object... objects);
 	//执行sql语句，可以通过制定clazz是否为空指定是否封装为实体
 	public List<T> executeSQLQuery(Class<?> clazz, String sql, Object...objects);
+	//分页返回
+	public List<T> findByPage(int offset, int pageSize, String hql, Object...objects);
+	//返回记录数
+	public Integer getAllRowCount(String hql, Object...objects);
 }
