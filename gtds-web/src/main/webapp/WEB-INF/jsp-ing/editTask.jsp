@@ -70,7 +70,7 @@
   		<s:hidden name="id"></s:hidden>
     	课题名称：<s:textfield name="name"></s:textfield>
     	<br>
-    	课题要求：<s:textarea name="demand" cols="25" rows="4"></s:textarea>
+    	课题要求：<s:textarea name="demand" cols="25" rows="4"></s:textarea><s:fielderror name="demand"></s:fielderror>
     	<br>
     	课题类型：<s:select list="#{0:'工程设计',1:'理论研究',2:'实验研究',3:'计算机软件研制',4:'综合',5:'经管文',6:'法学',7:'艺术'}" 
     				name="type"></s:select>

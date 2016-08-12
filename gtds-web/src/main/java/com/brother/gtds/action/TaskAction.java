@@ -24,6 +24,7 @@ import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.MajorService;
 import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
+import com.brother.gtds.service.TeacherService;
 import com.brother.gtds.service.page.PageBean;
 import com.brother.gtds.utils.FileUtils;
 import com.brother.gtds.utils.ValidationUtils;
@@ -42,6 +43,8 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 	private DepartmentService departmentService;
 	@Resource
 	private StudentTaskService studentTaskService;
+	@Resource
+	private TeacherService teacherService;
 	
 	private InputStream inputStream;
 	
@@ -60,7 +63,7 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 	//查看近几年的课题，最大值为3. 0表示本届
 	private Integer year = 3;
 	private List<Task> historyTasks;
-	private List<Task> myTasks;
+	private List<Task> tasks;
 	//00表示<--全部-->
 	private List<Major> majors;
 	
@@ -89,7 +92,7 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 		request.put("minCount", teacher.getMinCount());
 		request.put("maxCount", teacher.getMaxCount());
 		
-		myTasks = taskService.getMyCurrentTasks(teacher.getId());
+		tasks = taskService.getMyCurrentTasks(teacher.getId());
 		return "myTaskListPage";
 	}
 	
@@ -100,7 +103,7 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 		request.put("minCount", teacher.getMinCount());
 		request.put("maxCount", teacher.getMaxCount());
 		
-		myTasks = taskService.getMyAllTasks(teacher.getId());
+		tasks = taskService.getMyAllTasks(teacher.getId());
 		return "myTaskListPage";
 	}	
 	
@@ -125,21 +128,21 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 		{
 			model.setTutor((Teacher) user);
 			
-			if(file != null)
-			{
+//			if(file != null)
+//			{
 				String dir = sc.getRealPath("/upload/教师拟题审批表");
-				String extension = fileFileName.substring(fileFileName.lastIndexOf("."));
-				long l = System.nanoTime();
-				//保存文件
-				FileUtils.saveFile(file, new File(dir, l + extension));
-				//删除原来的文件
-				FileUtils.deleteFile(new File(dir, model.getPath()));
-				//保存新的文件名
-				String path = l + extension;
-				model.setPath(path);
-			}
+//				String extension = fileFileName.substring(fileFileName.lastIndexOf("."));
+//				long l = System.nanoTime();
+//				//保存文件
+//				FileUtils.saveFile(file, new File(dir, l + extension));
+//				//删除原来的文件
+//				FileUtils.deleteFile(new File(dir, model.getPath()));
+//				//保存新的文件名
+//				String path = l + extension;
+//				model.setPath(path);
+//			}
 			
-			taskService.saveOrUpdateTask(model);
+			taskService.saveOrUpdateTask(model, file, dir, fileFileName);
 		}
 		return "myTaskListAction";
 	}
@@ -227,7 +230,7 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 		Student student = (Student) user;
 		PageBean<Task> taskPage = this.taskService.getChoicePage(student.getMajor().getId(), tutorQuery, student.getId(), pageNum, pageSize);
 		this.request.put("taskPage", taskPage);
-		this.request.put("selectedTask", studentTaskService.getSelectedTask(student.getId()));
+		this.request.put("selectedTask", studentTaskService.getStudentTask(student));
 		return "choiceTasksPage";
 	}
 	
@@ -242,7 +245,7 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 		return choiceTutors;
 	}
 	
-	//显示课题详细信息
+	//显示课题详细信息（学生查看版）
 	public String showTaskInfo()
 	{
 		this.model = taskService.getTask(taskId);
@@ -250,6 +253,13 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 		request.put("currentPage", pageNum);
 		request.put("pageSize", pageSize);
 		return "taskInfoPage";
+	}
+	
+	//显示课题详细信息（老师查看版）
+	public String showTaskInfo2()
+	{
+		this.model = taskService.getTask(taskId);
+		return "taskInfo2Page";
 	}
 	
 	//返回选择了该课题的人数
@@ -262,6 +272,39 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 	public boolean isMySelectedTask(Integer taskId)
 	{
 		return this.studentTaskService.isMySelectedTask(user.getId(), taskId);
+	}
+	
+	
+	//学生自拟课题
+	public String stuProposeTask()
+	{
+		if(this.studentTaskService.isSelected((Student) user))
+			this.model = this.taskService.getTaskByStudent((Student)user);
+		
+		this.request.put("choiceTutors", teacherService.findChoiceTutors(user.getDepartment().getId()));
+		return "stuProposeTaskPage";
+	}
+	
+	//保存或更新学生自拟的课题
+	public String saveOrUpdateStuTask() throws Exception
+	{
+		String dir = sc.getRealPath("/upload/学生拟题审批表");
+		this.taskService.saveOrUpdateStuTask(model, (Student)user, file, dir, fileFileName);
+		return "choiceTasksAction";
+	}
+	
+	//去学生自拟课题申请页面
+	public String showStuProposeTasks()
+	{
+		tasks =  taskService.getStuProposeTasks((Teacher)user);
+		return "stuProposeTasksPage";
+	}
+	
+	//批量更新学生自拟课题
+	public String batchUpdateStudentTasks()
+	{
+		this.taskService.batchUpdateStuTasks(tasks);
+		return "stuProposeTaskAction";
 	}
 	
 	public String getMajorQuery() {
@@ -309,12 +352,12 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 		this.user = user;
 	}
 
-	public List<Task> getMyTasks() {
-		return myTasks;
+	public List<Task> getTasks() {
+		return tasks;
 	}
 
-	public void setMyTasks(List<Task> myTasks) {
-		this.myTasks = myTasks;
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
 	}
 
 	public String getTaskName() {
@@ -386,5 +429,4 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
-
 }

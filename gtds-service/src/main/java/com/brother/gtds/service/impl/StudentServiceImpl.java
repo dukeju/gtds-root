@@ -71,4 +71,13 @@ public class StudentServiceImpl extends BaseServiceImpl<Student> implements
 		return list;
 	}
 
+	//返回指定学生，已解决懒加载
+	@Override
+	public Student getStudent(String idQuery) {
+		Student s = this.getEntity(idQuery);
+		s.getMajor().getMajorName();
+		s.getDepartment().getName();
+		return s;
+	}
+
 }

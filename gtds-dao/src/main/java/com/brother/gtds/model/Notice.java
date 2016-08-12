@@ -13,11 +13,13 @@ public class Notice implements Serializable {
 	private Teacher teaSender;
 	// 领导发送者
 	private Admin adminSender;
+	//学生发送者
+	private Student stuSender;
 	// 教师接收者
 	private Teacher teaReceiver;
 	// 学生接受者
 	private Student stuReceiver;
-	// 是否接收到了通知
+	// 是否确认了通知
 	private boolean receive = false;
 	private Date date;
 	private String title;
@@ -113,6 +115,14 @@ public class Notice implements Serializable {
 
 	public void setDapartment(Department dapartment) {
 		this.dapartment = dapartment;
+	}
+
+	public Student getStuSender() {
+		return stuSender;
+	}
+
+	public void setStuSender(Student stuSender) {
+		this.stuSender = stuSender;
 	}
 
 }

@@ -83,4 +83,11 @@ public class TeacherServiceImpl extends BaseServiceImpl<Teacher> implements
 		t.setMaxCount(model.getMaxCount()==null?0:model.getMaxCount());
 	}
 
+	//返回指定学院的可选导师
+	@Override
+	public List<Teacher> findChoiceTutors(String dId) {
+		String hql = "from Teacher t where t.department.id = ?";
+		return this.findEntityByHQL(hql, dId);
+	}
+
 }

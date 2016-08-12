@@ -1,6 +1,7 @@
 package com.brother.gtds.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 学生选题类
@@ -14,6 +15,8 @@ public class StudentTask implements Serializable {
 	private Task task;
 	// 是否通过
 	private boolean pass = false;
+	// 选题时间
+	private Date date;
 	
 	//论文
 	private Thesis thesis;
@@ -76,6 +79,14 @@ public class StudentTask implements Serializable {
 
 	public void setInspector(Teacher inspector) {
 		this.inspector = inspector;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 }

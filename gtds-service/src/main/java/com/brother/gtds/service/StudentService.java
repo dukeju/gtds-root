@@ -11,4 +11,7 @@ public interface StudentService extends BaseService<Student> {
 			String majorQuery, String departmentQuery, String tutorQuery,
 			String taskQuery);
 
+	//返回指定学生，已解决懒加载
+	Student getStudent(String idQuery);
+
 }

@@ -16,4 +16,7 @@ public interface TeacherService extends BaseService<Teacher> {
 	//更新指导类型和数目
 	void updateTypeAndCount(String id, Teacher model);
 
+	//返回指定学院的可选导师
+	List<Teacher> findChoiceTutors(String dId);
+
 }

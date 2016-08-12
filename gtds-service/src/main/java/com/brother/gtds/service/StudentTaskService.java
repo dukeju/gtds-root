@@ -1,8 +1,11 @@
 package com.brother.gtds.service;
 
+import java.util.List;
+
 import com.brother.gtds.model.Student;
 import com.brother.gtds.model.StudentTask;
 import com.brother.gtds.model.Task;
+import com.brother.gtds.model.Teacher;
 
 public interface StudentTaskService extends BaseService<StudentTask> {
 
@@ -23,5 +26,17 @@ public interface StudentTaskService extends BaseService<StudentTask> {
 
 	//退选课题
 	void unselectTask(Integer taskId, String sId);
+
+	//该选题是否已经被导师通过
+	boolean isPassed(Integer taskId, Student user);
+
+	//返回该导师的学生选题集合
+	List<StudentTask> getMyStudentTasks(Teacher user);
+
+	//批量更新学生选课情况
+	void batchUpdateStuTasks(List<StudentTask> studentTasks);
+	
+	//返回指定学生选题的StudentTask
+	StudentTask getStudentTask(Student student);
 
 }

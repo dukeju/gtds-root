@@ -88,7 +88,7 @@
     	<table>
     		<tr>
     			<td>账号：</td>
-    			<td><s:textfield name="id" value="201208370125"></s:textfield></td>
+    			<td><s:textfield name="id" value="2006020002"></s:textfield></td>
     		</tr>
     		<tr>
     			<td>密码：</td>
@@ -114,7 +114,7 @@
     		<tr>
     			<td>身份</td>
     			<td>
-    				<s:radio list="#{0:'学生',1:'教师',2:'管理员'}" name="status" value="0"></s:radio>
+    				<s:radio list="#{0:'学生',1:'教师',2:'管理员'}" name="status" value="1"></s:radio>
     			</td>
     		</tr>
     		<tr>

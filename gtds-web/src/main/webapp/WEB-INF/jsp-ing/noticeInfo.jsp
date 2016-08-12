@@ -32,8 +32,9 @@
     			else if(html == "返回")
     			{
     				//跳转到首页
-    				window.location.href = "/gtds/index";
+    				window.location.href = "NoticeAction_getMyNotices";
     			}
+    			return false;
     		})
     	})
     </script>
@@ -43,14 +44,14 @@
   <body>
   	<h3><s:property value="title" /></h3>
   	<br>
-  	发送人：<s:property value="%{adminSender != null? adminSender.name : teaSender.name}" />
+  	发送人：<s:property value="%{adminSender == null? stuSender == null ? teaSender.name : stuSender.name : adminSender.name}" />
   	<br>
-  	接受者：<s:property value="#session.user.name"/><br>
+  	接收者：<s:property value="#session.user.name"/><br>
   	<br>
   	<br>
   	<s:property value="message"/>
   	<br>
-  	<a href="#" id="confirm">确认</a>
+  	<a href="" id="confirm"><s:property value="%{hasConfirm(id) ? '返回' : '确认'}" /></a>
   	<s:hidden name="id"></s:hidden>
   </body>
 </html>

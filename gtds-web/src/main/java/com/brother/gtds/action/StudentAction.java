@@ -15,7 +15,7 @@ import com.brother.gtds.action.aware.UserAware;
 import com.brother.gtds.model.Department;
 import com.brother.gtds.model.Major;
 import com.brother.gtds.model.Student;
-import com.brother.gtds.model.Task;
+import com.brother.gtds.model.StudentTask;
 import com.brother.gtds.model.Teacher;
 import com.brother.gtds.model.User;
 import com.brother.gtds.service.DepartmentService;
@@ -23,7 +23,7 @@ import com.brother.gtds.service.MajorService;
 import com.brother.gtds.service.StudentService;
 import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
-import com.brother.gtds.service.page.PageBean;
+import com.brother.gtds.service.TeacherService;
 
 @Controller
 @Scope("prototype")
@@ -41,13 +41,13 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 	private TaskService taskService;
 	@Resource
 	private StudentTaskService studentTaskService;
+	@Resource
+	private TeacherService teacherService;
 	
-	private Student user;
+	private User user;
 	private Map<String, Object> request;
 	
 	private Integer taskId;
-	private int pageNum;
-	private int pageSize = 5;;
 	//查询条件
 	private String idQuery;
 	private String nameQuery;
@@ -61,6 +61,7 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 	private List<Student> students;
 	private List<Major> majors;
 	private List<Department> departments;
+	private List<StudentTask> studentTasks;
 	
 	private InputStream inputStream;
 	
@@ -79,26 +80,6 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 		return "studentListPage";
 	}
 	
-//	//显示所有可选的课题
-//	public String showChoiceTasks()
-//	{
-//		PageBean<Task> taskPage = this.taskService.getChoicePage(user.getMajor().getId(), tutorQuery, user.getId(), pageNum, pageSize);
-//		this.request.put("taskPage", taskPage);
-//		this.request.put("selectedTask", studentTaskService.getSelectedTask(user.getId()));
-//		return "choiceTasksPage";
-//	}
-//	
-//	//返回可选择的导师
-//	public List<Teacher> getChoiceTutors()
-//	{
-//		List<Teacher> choiceTutors = this.taskService.getChoiceTutors(user.getMajor().getId());
-//		Teacher all = new Teacher();
-//		all.setId("00");
-//		all.setName("全部");
-//		choiceTutors.add(0, all);
-//		return choiceTutors;
-//	}
-	
 	//选择课程
 	public String selectTask()
 	{
@@ -111,13 +92,13 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 			else if(departmentService.beyondSelectEnd(user.getDepartment().getId()))
 				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
 			//如果已经选过课题了
-			else if(studentTaskService.isSelected(user))
+			else if(studentTaskService.isSelected((Student) user))
 			{
 				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
 			}
 			else
 			{
-				this.studentTaskService.selectTask(taskId, user);
+				this.studentTaskService.selectTask(taskId, (Student) user);
 				inputStream = new ByteArrayInputStream("3".getBytes("utf-8"));
 			}
 		}
@@ -142,6 +123,9 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 			//如果已经超过了选择课题时间
 			if(departmentService.beyondSelectEnd(user.getDepartment().getId()))
 				inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
+			//如果已经被导师确认通过
+			else if(studentTaskService.isPassed(taskId, (Student)user))
+				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
 			else
 			{
 				this.studentTaskService.unselectTask(taskId, user.getId());
@@ -153,6 +137,48 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 			e.printStackTrace();
 		}
 		return "ajax";
+	}
+	
+	//是否超过自拟课题的截止日期（选题截止日期的前一天）
+	public String beyongStuProposeExpiry()
+	{
+		try
+		{
+			//如果还没到学生自拟课题时间
+			if(departmentService.beforeStuProposeBegin(user.getDepartment().getId()))
+				inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
+			//如果已经超过了自拟课题时间
+			else if(this.departmentService.beyondStuProposeExpiry(user.getDepartment().getId()))
+				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
+			else
+				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return "ajax";
+	}
+	
+	//返回学生信息页面
+	public String studentInfo()
+	{
+		this.model = studentService.getStudent(idQuery);
+		return "studentInfoPage";
+	}
+	
+	//返回学生申请课题页面
+	public String showMyStudentTasks()
+	{
+		this.studentTasks = this.studentTaskService.getMyStudentTasks((Teacher)user);
+		return "myStudentTaskListPage";
+	}
+	
+	//批量更新学生选课情况
+	public String batchUpdateStuTasks()
+	{
+		this.studentTaskService.batchUpdateStuTasks(studentTasks);
+		return "myStudentTaskListAction";
 	}
 	
 	public String getIdQuery() {
@@ -229,7 +255,7 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 
 	@Override
 	public void setUser(User user) {
-		this.user = (Student) user;
+		this.user = user;
 	}
 
 	public Integer getTaskId() {
@@ -253,20 +279,12 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 		this.request = request;
 	}
 
-	public int getPageNum() {
-		return pageNum;
+	public List<StudentTask> getStudentTasks() {
+		return studentTasks;
 	}
 
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageNum(int pageNum) {
-		this.pageNum = pageNum;
-	}
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
+	public void setStudentTasks(List<StudentTask> studentTasks) {
+		this.studentTasks = studentTasks;
 	}
 
 }

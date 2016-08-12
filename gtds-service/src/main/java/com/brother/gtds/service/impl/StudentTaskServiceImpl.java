@@ -1,5 +1,8 @@
 package com.brother.gtds.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -8,12 +11,26 @@ import com.brother.gtds.dao.BaseDao;
 import com.brother.gtds.model.Student;
 import com.brother.gtds.model.StudentTask;
 import com.brother.gtds.model.Task;
+import com.brother.gtds.model.Teacher;
+import com.brother.gtds.service.DepartmentService;
+import com.brother.gtds.service.NoticeService;
 import com.brother.gtds.service.StudentTaskService;
+import com.brother.gtds.service.TaskService;
+import com.brother.gtds.service.TeacherService;
 
 @Service("studentTaskService")
 public class StudentTaskServiceImpl extends BaseServiceImpl<StudentTask> implements
 		StudentTaskService {
 
+	@Resource
+	private TaskService taskService;
+	@Resource
+	private DepartmentService departmentService;
+	@Resource
+	private TeacherService teacherService;
+	@Resource
+	private NoticeService noticeService;
+	
 	@Resource(name="studentTaskDao")
 	@Override
 	public void setDao(BaseDao<StudentTask> dao) {
@@ -23,11 +40,12 @@ public class StudentTaskServiceImpl extends BaseServiceImpl<StudentTask> impleme
 	//学生选择课题
 	@Override
 	public void selectTask(Integer taskId, Student student) {
-		Task t = new Task();
-		t.setId(taskId);
+		Task t = taskService.getEntity(taskId);
 		StudentTask st = new StudentTask();
 		st.setStudent(student);
 		st.setTask(t);
+		st.setTutor(t.getTutor());
+		st.setDate(new Date());
 		this.saveOrUpdateEntity(st);
 	}
 
@@ -79,6 +97,60 @@ public class StudentTaskServiceImpl extends BaseServiceImpl<StudentTask> impleme
 		String hql = "delete from StudentTask st where st.task.id = ?"
 				+ " and st.student.id = ?";
 		this.BatchEntityByHQL(hql, taskId, sId);
+		
+		//如果为学生自拟课题
+		Task t = taskService.getEntity(taskId);
+		if(t.getStudent() != null)
+			taskService.deleteEntity(t);
+	}
+
+	//该选题是否已经被导师通过
+	@Override
+	public boolean isPassed(Integer taskId, Student user) {
+		String hql = "from StudentTask st where st.task.id = ? and "
+				+ "st.student.id = ?";
+		StudentTask st = (StudentTask) this.uniqueResult(hql, taskId, user.getId());
+		return st.isPass();
+	}
+
+	//返回该导师的学生选题集合
+	@Override
+	public List<StudentTask> getMyStudentTasks(Teacher user) {
+		String hql = "from StudentTask st where st.tutor.id = ? and st.date >= ? "
+				+ "order by st.task.id asc, st.pass asc, st.date asc";
+		user = teacherService.getEntity(user.getId());
+		List<StudentTask> list = this.findEntityByHQL(hql, user.getId(), user.getDepartment().getSelectBegin());
+		for(StudentTask st : list)
+		{
+			st.getStudent().getName();
+			st.getTask().getName();
+		}
+		return list;
+	}
+
+	//批量更新学生选课情况
+	@Override
+	public void batchUpdateStuTasks(List<StudentTask> studentTasks) {
+		String hql = "update StudentTask st set st.pass = ? where st.id = ?";
+		for(StudentTask st : studentTasks)
+		{
+			this.BatchEntityByHQL(hql, st.isPass(), st.getId());
+			
+			//通知学生选题结果
+			this.noticeService.choiceTaskResult(st);
+		}
+	}
+
+	//返回指定学生选题的StudentTask
+	@Override
+	public StudentTask getStudentTask(Student student) {
+		String hql = "from StudentTask st where st.student.id = ?";
+		StudentTask st = (StudentTask) this.uniqueResult(hql, student.getId());
+		st.getTask().getName();
+		st.getTutor().getName();
+		if(st.getTask().getStudent() != null)
+			st.getTask().getStudent().getId();
+		return st;
 	}
 	
 }

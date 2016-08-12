@@ -1,5 +1,6 @@
 package com.brother.gtds.service.impl;
 
+import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,13 +12,21 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 
 import com.brother.gtds.dao.BaseDao;
+import com.brother.gtds.model.Department;
+import com.brother.gtds.model.Major;
+import com.brother.gtds.model.Student;
 import com.brother.gtds.model.StudentTask;
 import com.brother.gtds.model.Task;
 import com.brother.gtds.model.Teacher;
 import com.brother.gtds.service.DepartmentService;
+import com.brother.gtds.service.MajorService;
+import com.brother.gtds.service.NoticeService;
+import com.brother.gtds.service.StudentService;
 import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
+import com.brother.gtds.service.TeacherService;
 import com.brother.gtds.service.page.PageBean;
+import com.brother.gtds.utils.FileUtils;
 import com.brother.gtds.utils.ValidationUtils;
 
 @Service("taskService")
@@ -31,6 +40,14 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 	private DepartmentService departmentService;
 	@Resource
 	private StudentTaskService studentTaskService;
+	@Resource
+	private StudentService studentService;
+	@Resource
+	private NoticeService noticeService;
+	@Resource
+	private TeacherService teacherService;
+	@Resource
+	private MajorService majorService;
 	
 	@Override
 	@Resource(name="taskDao")
@@ -68,9 +85,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 	//查找出指定教师本届出的课题
 	public List<Task> getMyCurrentTasks(String id)
 	{
-		Calendar calendar = Calendar.getInstance();
-		int year = calendar.get(Calendar.YEAR);
-		Date date = Date.valueOf(year + "-1-1");
+		Teacher t = teacherService.getEntity(id);
+		java.util.Date date = t.getDepartment().getProposeBegin();
 		String hql = "from Task t where t.tutor.id = ? and t.publishDate >= ? "
 				+ "order by t.publishDate asc";
 		List<Task> tasks = this.findEntityByHQL(hql, id, date);
@@ -79,6 +95,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 		for(Task task : tasks)
 		{
 			task.getMajor().getMajorName();
+			if(task.getStudent() != null)
+				task.getStudent().getName();
 		}
 		return tasks;
 	}
@@ -93,6 +111,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 		for(Task task : tasks)
 		{
 			task.getMajor().getMajorName();
+			if(task.getStudent() != null)
+				task.getStudent().getName();
 		}
 		return tasks;
 	}	
@@ -109,7 +129,7 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 
 	//更新或拟定课题
 	@Override
-	public void saveOrUpdateTask(Task model) {
+	public void saveOrUpdateTask(Task model, File file, String dir, String fileName) throws Exception {
 //		//判断是否超过截止出题日期
 //		if(departmentService.beyondExpiryDate(model.getTutor().getDepartment().getId()))
 //			System.out.println("已经超过了截止出题日期，无法拟定！该课题无效!");
@@ -134,8 +154,19 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 //			a different object with the same identifier value was already associated with the session
 //			(与上面调用的getMyCurrentTasks()方法冲突)
 //			 */
-//			factory.getCurrentSession().clear();;
-			
+//			factory.getCurrentSession().clear();
+			if(file != null)
+			{
+				String extension = fileName.substring(fileName.lastIndexOf("."));
+				long l = System.nanoTime();
+				//保存文件
+				FileUtils.saveFile(file, new File(dir, l + extension));
+				//删除原来的文件
+				FileUtils.deleteFile(new File(dir, model.getPath()));
+				//保存新的文件名
+				String path = l + extension;
+				model.setPath(path);
+			}
 			model.setPublishDate(new java.util.Date());
 			this.saveOrUpdateEntity(model);
 //		}
@@ -144,22 +175,20 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 	//判断是否可以编辑
 	@Override
 	public boolean isEditableTask(String dId, Integer tId) {
-		Calendar calendar = Calendar.getInstance();
-		int year1 = calendar.get(Calendar.YEAR);
-		
+		//是否可以新建课题的情况
 		if(tId == null)
 		{
-			if(departmentService.beyondProposeExpiry(dId))
-				return false;
-			return true;
+			if(!departmentService.beforeProposeBegin(dId) && !departmentService.beyondProposeExpiry(dId))
+				return true;
+			return false;
 		}
+		//是否可以修改课题的情况
 		else
 		{
 			Task task = this.getEntity(tId);
-			calendar.setTime(task.getPublishDate());
-			int year2 = calendar.get(Calendar.YEAR);
-			//本届发布的课题且没有超过截止出题时间
-			if(!departmentService.beyondProposeExpiry(dId) && year1 == year2)
+			Department d = departmentService.getEntity(dId);
+			//本届发布的课题
+			if(!departmentService.beyondProposeExpiry(dId) && task.getPublishDate().after(d.getProposeBegin()))
 				return true;
 			return false;
 		}
@@ -211,15 +240,12 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 		return count;
 	}
 
-	//获得我的选择的课题
+	//获得我的可以选择的课题
 	@Override
 	public PageBean<Task> getChoicePage(String mId, String tutorQuery, String sId, int pageNum, int pageSize) {
 		PageBean<Task> page = null;
-		Calendar calendar = Calendar.getInstance();
-		int year = calendar.get(Calendar.YEAR);
-		Date date = Date.valueOf(year + "-1-1");
 		String hql = "from Task t where t.publishDate >= ? and t.major.id = ? "
-				+ "and t.pass = ?";
+				+ "and t.pass = ? and t.student.id is null";
 		
 		//不包括自己已选的课题
 		if(ValidationUtils.validateString(sId))
@@ -238,7 +264,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 		{
 			hql += " order by t.tutor.name asc";
 		}
-		page = this.getPageBean(pageNum, pageSize, hql, date, mId, true);
+		Major m = majorService.getEntity(mId);
+		page = this.getPageBean(pageNum, pageSize, hql, m.getDepartment().getProposeBegin(), mId, true);
 		
 		
 		for(Task t : page.getList())
@@ -271,6 +298,81 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 		t.getTutor().getDepartment().getName();
 		t.getMajor().getMajorName();
 		return t;
+	}
+
+	//保存或更新学生自拟的课题
+	@Override
+	public void saveOrUpdateStuTask(Task model, Student user, File file, String dir, String fileName) throws Exception {
+		model.setStudent(user);
+		model.setMajor(this.studentService.getEntity(user.getId()).getMajor());
+		if(model.getId() == null)
+		{
+			model.setPass(false);
+			model.setCapacity(1);
+			//先保存Task，才能再保存StudentTask
+			this.saveOrUpdateTask(model, file, dir, fileName);
+			this.studentTaskService.selectTask(model.getId(), user);
+		}
+		else
+			this.saveOrUpdateTask(model, file, dir, fileName);
+		
+		//通知导师
+		noticeService.stuProposeTask(user, model.getTutor(), model);
+	}
+
+	//返回学生自拟课题集合
+	@Override
+	public List<Task> getStuProposeTasks(Teacher user) {
+		String hql = "from Task t where t.tutor.id = ? and t.publishDate >= ? "
+				+ "and t.student.id is not null";
+		user = teacherService.getEntity(user.getId());
+		List<Task> tasks = this.findEntityByHQL(hql, user.getId(), user.getDepartment().getProposeBegin());
+		for(Task t : tasks)
+		{
+			t.getStudent().getName();
+			t.getMajor().getMajorName();
+		}
+		return tasks;
+	}
+
+	//返回学生的自拟课题
+	@Override
+	public Task getTaskByStudent(Student user) {
+		String hql = "from Task t where t.student.id = ?";
+		Task t = (Task) this.uniqueResult(hql, user.getId());
+		
+		if(t != null)
+			t.getTutor().getName();
+		
+		return t;
+	}
+
+	//批量更新学生自拟课题结果
+	@Override
+	public void batchUpdateStuTasks(List<Task> tasks) {
+		if(ValidationUtils.validateColl(tasks))
+		{
+			String hql1 = "update Task t set t.pass = ? where t.id = ?";
+			String hql2 = "update StudentTask st set st.pass = ? where st.task.id = ? "
+					+ "and st.student.id = ?";
+			for(int i=0; i<tasks.size(); i++)
+			{
+				Task t = tasks.get(i);
+				this.BatchEntityByHQL(hql1, t.isPass(), t.getId());
+				this.studentTaskService.BatchEntityByHQL(hql2, t.isPass(), t.getId(), 
+						this.getEntity(t.getId()).getStudent().getId());
+				
+				//通知学生自拟课题结果
+				this.noticeService.stuTaskResult(t);
+			}
+		}
+	}
+
+	//是否是学生自拟课题
+	@Override
+	public boolean isStudentTask(Integer tId) {
+		Task t = this.getEntity(tId);
+		return t.getStudent() != null;
 	}
 
 }

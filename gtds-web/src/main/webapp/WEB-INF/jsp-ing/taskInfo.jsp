@@ -29,11 +29,6 @@
 					}
 				})
 			})
-			$("#goBack").click(function(){
-				alert(111);
-				alert(document.referrer);
-				window.location.href=document.referrer;
-			})
 		})  
     </script>
 
