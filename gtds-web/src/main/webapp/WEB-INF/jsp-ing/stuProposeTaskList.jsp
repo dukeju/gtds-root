@@ -6,11 +6,25 @@
   <head>
     
     <title>自拟课题申请列表</title>
+    <script type="text/javascript" src='<s:url value="/script/jquery-1.12.1.js"/>'></script>
+    <script type="text/javascript">
+    	$(function(){
+    		$("#submit").click(function(){
+    			return confirm("提交以后就不能修改了，确定要提交吗？");
+    		})
+    	})
+    </script>
 
   </head>
   
   <body>
-  	<s:form action="TaskAction_batchUpdateStudentTasks" method="post">
+  	<s:set value="#session.user.minCount" var="minCount"></s:set>
+  	<s:set value="#session.user.maxCount" var="maxCount"></s:set>
+  	<s:set value="#request.currentCount" var="currentCount"></s:set>
+  	我的最小指导人数：<s:property value="#minCount" /><br>
+  	我的最大指导人数：<s:property value="#maxCount" /><br>
+  	目前指导人数：<s:property value="#currentCount" />
+  	<s:form action="TaskAction_batchUpdateStuProposeTasks" method="post">
 	    <table width="100%" border="1" cellspacing="0">
 	    	<tr>
 	    		<td></td>
@@ -30,7 +44,7 @@
 	    	<s:iterator value="%{tasks}" status="st">
 	    		<tr>
 	    			<td><s:property value="#st.index + 1" /></td>
-	    			<td><s:property value="name" /></td>
+	    			<td><s:a action="TaskAction_showTaskInfo2?taskId=%{id}"><s:property value="name" /></s:a></td>
 	    			<td><s:property value="%{#type[type]}"/></td>
     				<td><s:property value="%{#source[source]}"/></td>
     				<td><s:property value="demand" /></td>
@@ -48,7 +62,10 @@
 	    	</s:iterator>
 	    </table>
 	    <br>
-	    <center><s:submit value="确定" /></center>
+	    <s:set value="isUpdateStuProposeTasks()" var="update"></s:set>
+	    <s:if test="#update">
+		    <center><s:submit value="确定" id="submit"/></center>
+	    </s:if>
   	</s:form>
   </body>
 </html>

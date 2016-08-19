@@ -8,6 +8,8 @@ import org.apache.struts2.util.ServletContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.brother.gtds.utils.ValidationUtils;
+
 @SuppressWarnings("rawtypes")
 @Controller
 @Scope("prototype")
@@ -29,6 +31,8 @@ public class DownloadAction extends BaseAction implements ServletContextAware {
 	 */
 	private Integer number;
 	private String fileName;
+	//文件路径
+	private String path;
 	
 	private InputStream inputStream;
 	
@@ -49,10 +53,24 @@ public class DownloadAction extends BaseAction implements ServletContextAware {
 			case 9 : fileName = "广东工业大学本科生毕业设计（论文）中期检查表.docx"; break;
 			case 10 : fileName = "广东工业大学本科生毕业设计（论文）学生拟题审批表.docx"; break;
 		}
-		inputStream = sc.getResourceAsStream("/相关表格/" + fileName);
+		if(ValidationUtils.validateString(path))
+		{
+			String extension = path.substring(path.lastIndexOf("."));
+			fileName = fileName.substring(0, fileName.lastIndexOf(".")) + extension;
+			inputStream = sc.getResourceAsStream(path);
+		}
+		inputStream = inputStream != null? inputStream : sc.getResourceAsStream("/相关表格/" + fileName);
 		//解解乱码 ，iso-8859-1是JAVA网络传输使用的标准字符集
-        fileName = new String(this.fileName.getBytes("GBK"),"ISO-8859-1");
+        fileName = new String(fileName.getBytes("GBK"),"ISO-8859-1");
 		return SUCCESS;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public Integer getNumber() {

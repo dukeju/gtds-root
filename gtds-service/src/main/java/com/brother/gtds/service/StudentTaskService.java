@@ -39,4 +39,7 @@ public interface StudentTaskService extends BaseService<StudentTask> {
 	//返回指定学生选题的StudentTask
 	StudentTask getStudentTask(Student student);
 
+	//返回导师的目前指导人数
+	Long getCurrentCount(Teacher user);
+
 }

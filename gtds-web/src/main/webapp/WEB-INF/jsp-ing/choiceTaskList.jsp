@@ -47,9 +47,9 @@
 							if(data == 0)
 								alert("已经过了选择课题的时间！");
 							else if(data == 1)
-								alert("退选成功！");
-							else if(data == 2)
 								alert("已经被导师确认通过，不能退选！");
+							else if(data == 2)
+								alert("退选成功！");
 							else
 								alert("服务器错误，操作失败！");
 						}
@@ -59,7 +59,7 @@
 					return false;
 			})
 			
-			$(".expiry").click(function(){
+			$(".propose").click(function(){
 				var result = false;
 				var url = "StudentAction_beyongStuProposeExpiry";
 				var args = {};
@@ -92,7 +92,7 @@
   		<s:submit value="确定"></s:submit>
   	</s:form>
   	
-  	<a href="TaskAction_stuProposeTask" class="expiry">自拟课题</a>
+  	<a href="TaskAction_stuProposeTask" class="propose">自拟课题</a>
   
     <table width="100%" border="1" cellspacing="0">
     	<tr>

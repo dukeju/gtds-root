@@ -20,6 +20,7 @@ import com.brother.gtds.model.Teacher;
 import com.brother.gtds.model.User;
 import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.MajorService;
+import com.brother.gtds.service.ScheduleService;
 import com.brother.gtds.service.StudentService;
 import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
@@ -37,6 +38,8 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 	private MajorService majorService;
 	@Resource
 	private DepartmentService departmentService;
+	@Resource
+	private ScheduleService scheduleService;
 	@Resource
 	private TaskService taskService;
 	@Resource
@@ -86,10 +89,10 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 		try
 		{
 			//如果还没到选择课题时间
-			if(departmentService.beforeSelectBegin(user.getDepartment().getId()))
+			if(scheduleService.beforeSelectBegin(user.getDepartment().getId()))
 				inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
 			//如果已经超过了选择课题时间
-			else if(departmentService.beyondSelectEnd(user.getDepartment().getId()))
+			else if(scheduleService.beyondSelectEnd(user.getDepartment().getId()))
 				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
 			//如果已经选过课题了
 			else if(studentTaskService.isSelected((Student) user))
@@ -121,15 +124,15 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 		try
 		{
 			//如果已经超过了选择课题时间
-			if(departmentService.beyondSelectEnd(user.getDepartment().getId()))
+			if(scheduleService.beyondSelectEnd(user.getDepartment().getId()))
 				inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
 			//如果已经被导师确认通过
 			else if(studentTaskService.isPassed(taskId, (Student)user))
-				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
+				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
 			else
 			{
 				this.studentTaskService.unselectTask(taskId, user.getId());
-				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
+				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
 			}
 		}
 		catch(Exception e)
@@ -145,10 +148,10 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 		try
 		{
 			//如果还没到学生自拟课题时间
-			if(departmentService.beforeStuProposeBegin(user.getDepartment().getId()))
+			if(scheduleService.beforeStuProposeBegin(user.getDepartment().getId()))
 				inputStream = new ByteArrayInputStream("0".getBytes("utf-8"));
 			//如果已经超过了自拟课题时间
-			else if(this.departmentService.beyondStuProposeExpiry(user.getDepartment().getId()))
+			else if(this.scheduleService.beyondStuProposeExpiry(user.getDepartment().getId()))
 				inputStream = new ByteArrayInputStream("1".getBytes("utf-8"));
 			else
 				inputStream = new ByteArrayInputStream("2".getBytes("utf-8"));
@@ -171,7 +174,15 @@ public class StudentAction extends BaseAction<Student> implements UserAware, Req
 	public String showMyStudentTasks()
 	{
 		this.studentTasks = this.studentTaskService.getMyStudentTasks((Teacher)user);
+		this.request.put("currentCount", studentTaskService.getCurrentCount((Teacher)user));
 		return "myStudentTaskListPage";
+	}
+	
+	//返回是否可以更新学生选题情况
+	public boolean isUpdateStuTask()
+	{
+		String dId = user.getDepartment().getId();
+		return scheduleService.beyondSelectEnd(dId);
 	}
 	
 	//批量更新学生选课情况

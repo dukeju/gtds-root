@@ -55,9 +55,13 @@ public interface TaskService extends BaseService<Task> {
 	Task getTaskByStudent(Student user);
 
 	//批量更新学生自拟课题
-	void batchUpdateStuTasks(List<Task> tasks);
+	void batchUpdateStuProposeTasks(List<Task> tasks);
 	
 	//是否是学生自拟课题
 	boolean isStudentTask(Integer tId);
+
+	//教师上传学生拟题审批表
+	void uploadStuTaskTable(Integer taskId, File file, String dir,
+			String fileFileName) throws Exception;
 	
 }

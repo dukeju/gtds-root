@@ -47,6 +47,7 @@
 		  			<td>课题来源</td>
 		  			<td>招收人数</td>
 		  			<td>已选人数</td>
+		  			<td>我的审批表</td>
 		  		</tr>
 		  		<tr>
 		  			<s:set value="#{0:'工程设计',1:'理论研究',2:'实验研究',3:'计算机软件研制',4:'综合',5:'经管文',6:'法学',7:'艺术'}"
@@ -60,15 +61,21 @@
 		  			<td><s:property value="%{#taskSource[source]}" /></td>
 		  			<td><s:property value="capacity" /></td>
 		  			<td><s:property value="getSelectedCount(id)" /></td>
+		  			<td>
+		  				<s:if test="student == null">无</s:if>
+		  				<s:else>
+							审批表：<s:a action="DownloadAction?number=10&path=%{path}">下载</s:a>
+		  				</s:else>
+		  			</td>
 		  		</tr>
 		  		<tr>
-		  			<td colspan="7" align="center">课题要求</td>
+		  			<td colspan="8" align="center">课题要求</td>
 		  		</tr>
 		  		<tr>
-		  			<td colspan="7"><s:property value="demand" /></td>
+		  			<td colspan="8"><s:property value="demand" /></td>
 		  		</tr>
 		  		<tr>
-		  			<td colspan="7" align="center">
+		  			<td colspan="8" align="center">
 		  				<s:set value="isMySelectedTask(id)" var="selected"></s:set>
 		  				<s:if test="!#selected">
 			  				<a href="" class="select">选择课题</a>

@@ -106,6 +106,7 @@
 			<result name="choiceTasksAction" type="redirect">TaskAction_showChoiceTasks</result>
 			<result name="stuProposeTasksPage">/WEB-INF/jsp-ing/stuProposeTaskList.jsp</result>
 			<result name="stuProposeTaskAction" type="redirect">TaskAction_showStuProposeTasks</result>
+			<result name="taskInfo2Action" type="redirect">TaskAction_showTaskInfo2?taskId=${taskId}</result>
 		</action>
 		
 		<!-- DownloadAction -->

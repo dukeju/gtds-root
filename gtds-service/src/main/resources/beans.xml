@@ -44,6 +44,7 @@
 				<value>com/brother/gtds/model/Major.hbm.xml</value>
 				<value>com/brother/gtds/model/Admin.hbm.xml</value>
 				<value>com/brother/gtds/model/StudentTask.hbm.xml</value>
+				<value>com/brother/gtds/model/Schedule.hbm.xml</value>
 			</list>
 		</property>
 	</bean>

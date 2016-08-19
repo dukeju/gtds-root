@@ -12,11 +12,12 @@ import com.brother.gtds.model.Student;
 import com.brother.gtds.model.StudentTask;
 import com.brother.gtds.model.Task;
 import com.brother.gtds.model.Teacher;
-import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.NoticeService;
+import com.brother.gtds.service.ScheduleService;
 import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
 import com.brother.gtds.service.TeacherService;
+import com.brother.gtds.utils.ValidationUtils;
 
 @Service("studentTaskService")
 public class StudentTaskServiceImpl extends BaseServiceImpl<StudentTask> implements
@@ -25,7 +26,7 @@ public class StudentTaskServiceImpl extends BaseServiceImpl<StudentTask> impleme
 	@Resource
 	private TaskService taskService;
 	@Resource
-	private DepartmentService departmentService;
+	private ScheduleService scheduleService;
 	@Resource
 	private TeacherService teacherService;
 	@Resource
@@ -117,9 +118,10 @@ public class StudentTaskServiceImpl extends BaseServiceImpl<StudentTask> impleme
 	@Override
 	public List<StudentTask> getMyStudentTasks(Teacher user) {
 		String hql = "from StudentTask st where st.tutor.id = ? and st.date >= ? "
-				+ "order by st.task.id asc, st.pass asc, st.date asc";
+				+ "order by st.pass asc, st.task.id asc, st.date asc";
 		user = teacherService.getEntity(user.getId());
-		List<StudentTask> list = this.findEntityByHQL(hql, user.getId(), user.getDepartment().getSelectBegin());
+		List<StudentTask> list = this.findEntityByHQL(hql, user.getId(), 
+				scheduleService.getSchedule(user.getDepartment().getId()).getStuProposeBegin());
 		for(StudentTask st : list)
 		{
 			st.getStudent().getName();
@@ -131,13 +133,16 @@ public class StudentTaskServiceImpl extends BaseServiceImpl<StudentTask> impleme
 	//批量更新学生选课情况
 	@Override
 	public void batchUpdateStuTasks(List<StudentTask> studentTasks) {
-		String hql = "update StudentTask st set st.pass = ? where st.id = ?";
-		for(StudentTask st : studentTasks)
+		if(ValidationUtils.validateColl(studentTasks))
 		{
-			this.BatchEntityByHQL(hql, st.isPass(), st.getId());
-			
-			//通知学生选题结果
-			this.noticeService.choiceTaskResult(st);
+			String hql = "update StudentTask st set st.pass = ? where st.id = ?";
+			for(StudentTask st : studentTasks)
+			{
+				this.BatchEntityByHQL(hql, st.isPass(), st.getId());
+				
+				//通知学生选题结果
+				this.noticeService.choiceTaskResult(st);
+			}
 		}
 	}
 
@@ -146,11 +151,25 @@ public class StudentTaskServiceImpl extends BaseServiceImpl<StudentTask> impleme
 	public StudentTask getStudentTask(Student student) {
 		String hql = "from StudentTask st where st.student.id = ?";
 		StudentTask st = (StudentTask) this.uniqueResult(hql, student.getId());
-		st.getTask().getName();
-		st.getTutor().getName();
-		if(st.getTask().getStudent() != null)
-			st.getTask().getStudent().getId();
+		if(st != null)
+		{
+			st.getTask().getName();
+			st.getTutor().getName();
+			if(st.getTask().getStudent() != null)
+				st.getTask().getStudent().getId();
+		}
 		return st;
+	}
+
+	//返回导师的目前指导人数
+	@Override
+	public Long getCurrentCount(Teacher user) {
+		String hql = "select count(st) from StudentTask st where st.tutor.id = ? "
+				+ "and st.date >= ? and st.pass = ?";
+		Teacher t = teacherService.getEntity(user.getId());
+		Long count = (Long) this.uniqueResult(hql, user.getId(), 
+				scheduleService.getSchedule(t.getDepartment().getId()).getStuProposeBegin(), true);
+		return count;
 	}
 	
 }

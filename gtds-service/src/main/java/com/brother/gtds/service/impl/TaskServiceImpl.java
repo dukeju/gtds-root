@@ -12,15 +12,15 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 
 import com.brother.gtds.dao.BaseDao;
-import com.brother.gtds.model.Department;
 import com.brother.gtds.model.Major;
+import com.brother.gtds.model.Schedule;
 import com.brother.gtds.model.Student;
 import com.brother.gtds.model.StudentTask;
 import com.brother.gtds.model.Task;
 import com.brother.gtds.model.Teacher;
-import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.MajorService;
 import com.brother.gtds.service.NoticeService;
+import com.brother.gtds.service.ScheduleService;
 import com.brother.gtds.service.StudentService;
 import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
@@ -35,9 +35,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 
 	@Resource
 	private SessionFactory factory;
-	
 	@Resource
-	private DepartmentService departmentService;
+	private ScheduleService scheduleService;
 	@Resource
 	private StudentTaskService studentTaskService;
 	@Resource
@@ -86,7 +85,7 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 	public List<Task> getMyCurrentTasks(String id)
 	{
 		Teacher t = teacherService.getEntity(id);
-		java.util.Date date = t.getDepartment().getProposeBegin();
+		java.util.Date date = scheduleService.getSchedule(t.getDepartment().getId()).getProposeBegin();
 		String hql = "from Task t where t.tutor.id = ? and t.publishDate >= ? "
 				+ "order by t.publishDate asc";
 		List<Task> tasks = this.findEntityByHQL(hql, id, date);
@@ -162,10 +161,12 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 				//保存文件
 				FileUtils.saveFile(file, new File(dir, l + extension));
 				//删除原来的文件
-				FileUtils.deleteFile(new File(dir, model.getPath()));
+				FileUtils.deleteFile(new File(dir, model.getPath().substring(model.getPath().lastIndexOf("/"))));
 				//保存新的文件名
-				String path = l + extension;
-				model.setPath(path);
+				if(model.getStudent() == null)
+					model.setPath("/upload/教师拟题审批表/" + l + extension);
+				else
+					model.setPath("/upload/学生拟题审批表/" + l + extension);
 			}
 			model.setPublishDate(new java.util.Date());
 			this.saveOrUpdateEntity(model);
@@ -178,7 +179,7 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 		//是否可以新建课题的情况
 		if(tId == null)
 		{
-			if(!departmentService.beforeProposeBegin(dId) && !departmentService.beyondProposeExpiry(dId))
+			if(!scheduleService.beforeProposeBegin(dId) && !scheduleService.beyondProposeExpiry(dId))
 				return true;
 			return false;
 		}
@@ -186,9 +187,9 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 		else
 		{
 			Task task = this.getEntity(tId);
-			Department d = departmentService.getEntity(dId);
+			Schedule d = scheduleService.getSchedule(dId);
 			//本届发布的课题
-			if(!departmentService.beyondProposeExpiry(dId) && task.getPublishDate().after(d.getProposeBegin()))
+			if(!scheduleService.beyondProposeExpiry(dId) && task.getPublishDate().after(d.getProposeBegin()))
 				return true;
 			return false;
 		}
@@ -265,7 +266,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 			hql += " order by t.tutor.name asc";
 		}
 		Major m = majorService.getEntity(mId);
-		page = this.getPageBean(pageNum, pageSize, hql, m.getDepartment().getProposeBegin(), mId, true);
+		page = this.getPageBean(pageNum, pageSize, hql, 
+				scheduleService.getSchedule(m.getDepartment().getId()).getProposeBegin(), mId, true);
 		
 		
 		for(Task t : page.getList())
@@ -324,9 +326,10 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 	@Override
 	public List<Task> getStuProposeTasks(Teacher user) {
 		String hql = "from Task t where t.tutor.id = ? and t.publishDate >= ? "
-				+ "and t.student.id is not null";
+				+ "and t.student.id is not null order by t.pass asc";
 		user = teacherService.getEntity(user.getId());
-		List<Task> tasks = this.findEntityByHQL(hql, user.getId(), user.getDepartment().getProposeBegin());
+		List<Task> tasks = this.findEntityByHQL(hql, user.getId(), 
+				scheduleService.getSchedule(user.getDepartment().getId()).getProposeBegin());
 		for(Task t : tasks)
 		{
 			t.getStudent().getName();
@@ -349,7 +352,7 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 
 	//批量更新学生自拟课题结果
 	@Override
-	public void batchUpdateStuTasks(List<Task> tasks) {
+	public void batchUpdateStuProposeTasks(List<Task> tasks) {
 		if(ValidationUtils.validateColl(tasks))
 		{
 			String hql1 = "update Task t set t.pass = ? where t.id = ?";
@@ -373,6 +376,13 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 	public boolean isStudentTask(Integer tId) {
 		Task t = this.getEntity(tId);
 		return t.getStudent() != null;
+	}
+
+	//教师上传学生拟题审批表
+	@Override
+	public void uploadStuTaskTable(Integer taskId, File file, String dir,
+			String fileFileName) throws Exception {
+		this.saveOrUpdateTask(this.getEntity(taskId), file, dir, fileFileName);
 	}
 
 }

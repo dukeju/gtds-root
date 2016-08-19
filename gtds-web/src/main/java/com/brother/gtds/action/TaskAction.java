@@ -20,8 +20,8 @@ import com.brother.gtds.model.Student;
 import com.brother.gtds.model.Task;
 import com.brother.gtds.model.Teacher;
 import com.brother.gtds.model.User;
-import com.brother.gtds.service.DepartmentService;
 import com.brother.gtds.service.MajorService;
+import com.brother.gtds.service.ScheduleService;
 import com.brother.gtds.service.StudentTaskService;
 import com.brother.gtds.service.TaskService;
 import com.brother.gtds.service.TeacherService;
@@ -40,7 +40,7 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 	@Resource
 	private MajorService majorService;
 	@Resource
-	private DepartmentService departmentService;
+	private ScheduleService scheduleService;
 	@Resource
 	private StudentTaskService studentTaskService;
 	@Resource
@@ -293,17 +293,33 @@ public class TaskAction extends BaseAction<Task> implements UserAware, ServletCo
 		return "choiceTasksAction";
 	}
 	
+	//教师上传学生拟题审批表
+	public String uploadStuTaskTable() throws Exception
+	{
+		String dir = sc.getRealPath("/upload/学生拟题审批表");
+		this.taskService.uploadStuTaskTable(taskId, file, dir, fileFileName);
+		return "taskInfo2Action";
+	}
+	
 	//去学生自拟课题申请页面
 	public String showStuProposeTasks()
 	{
 		tasks =  taskService.getStuProposeTasks((Teacher)user);
+		this.request.put("currentCount", studentTaskService.getCurrentCount((Teacher)user));
 		return "stuProposeTasksPage";
 	}
 	
-	//批量更新学生自拟课题
-	public String batchUpdateStudentTasks()
+	//返回是否可以更新学生自拟课题是否通过
+	public boolean isUpdateStuProposeTasks()
 	{
-		this.taskService.batchUpdateStuTasks(tasks);
+		String dId = user.getDepartment().getId();
+		return scheduleService.beforeSelectBegin(dId) && scheduleService.beyondStuProposeExpiry(dId);
+	}
+	
+	//批量更新学生自拟课题
+	public String batchUpdateStuProposeTasks()
+	{
+		this.taskService.batchUpdateStuProposeTasks(tasks);
 		return "stuProposeTaskAction";
 	}
 	
