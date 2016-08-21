@@ -161,7 +161,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task> implements
 				//保存文件
 				FileUtils.saveFile(file, new File(dir, l + extension));
 				//删除原来的文件
-				FileUtils.deleteFile(new File(dir, model.getPath().substring(model.getPath().lastIndexOf("/"))));
+				if(ValidationUtils.validateString(model.getPath()))
+					FileUtils.deleteFile(new File(dir, model.getPath().substring(model.getPath().lastIndexOf("/"))));
 				//保存新的文件名
 				if(model.getStudent() == null)
 					model.setPath("/upload/教师拟题审批表/" + l + extension);

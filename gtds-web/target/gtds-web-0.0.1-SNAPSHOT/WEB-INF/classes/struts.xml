@@ -64,7 +64,11 @@
 				<param name="inputName">inputStream</param>
 			</result>
 			<result name="input">/index.jsp</result>
-			<result name="success" type="redirect">index</result>
+			<!-- <result name="success" type="redirect">index</result> -->
+			<result name="success" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
 		</action>
 
 		<!-- StudentAction -->
@@ -76,7 +80,11 @@
 			</result>
 			<result name="studentInfoPage">/WEB-INF/jsp-ing/studentInfo.jsp</result>
 			<result name="myStudentTaskListPage">/WEB-INF/jsp-ing/myStudentTaskList.jsp</result>
-			<result name="myStudentTaskListAction" type="redirect">StudentAction_showMyStudentTasks</result>
+			<!-- <result name="myStudentTaskListAction" type="redirect">StudentAction_showMyStudentTasks</result> -->
+			<result name="myStudentTaskListAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">StudentAction_showMyStudentTasks</param>
+			</result>
 		</action>
 
 		<!-- teacherAction -->
@@ -84,7 +92,12 @@
 			<result name="teacherListPage">/WEB-INF/jsp-ing/teacherList.jsp</result>
 			<result name="teacherInfoPage">/WEB-INF/jsp-ing/teacherInfo.jsp</result>
 			<result name="editTypeAndCountPage">/WEB-INF/jsp-ing/editTypeAndCount.jsp</result>
-			<result name="teacherInfoAction" type="redirect">TeacherAction_getDetailInfo?teacherId=${teacherId}</result>
+			<!-- <result name="teacherInfoAction" type="redirect">TeacherAction_getDetailInfo?teacherId=${teacherId}</result> -->
+			<result name="teacherInfoAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">TeacherAction_getDetailInfo</param>
+				<param name="teacherId">${teacherId}</param>
+			</result>
 			<result name="teacherTaskListPage">/WEB-INF/jsp-ing/teacherTaskList.jsp</result>
 		</action>
 
@@ -94,7 +107,11 @@
 			<result name="myTaskListPage">/WEB-INF/jsp-ing/myTaskList.jsp</result>
 			<result name="editTaskPage">/WEB-INF/jsp-ing/editTask.jsp</result>
 			<result name="input">/WEB-INF/jsp-ing/editTask.jsp</result>
-			<result name="myTaskListAction" type="redirect">TaskAction_myCurrentTasks</result>
+			<!-- <result name="myTaskListAction" type="redirect">TaskAction_myCurrentTasks</result> -->
+			<result name="myTaskListAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">TaskAction_myCurrentTasks</param>
+			</result>
 			<result name="validateNameAjax" type="stream">
 				<param name="contentType">text/html</param>
 				<param name="inputName">inputStream</param>
@@ -103,10 +120,23 @@
 			<result name="taskInfo2Page">/WEB-INF/jsp-ing/taskInfo2.jsp</result>
 			<result name="choiceTasksPage">/WEB-INF/jsp-ing/choiceTaskList.jsp</result>
 			<result name="stuProposeTaskPage">/WEB-INF/jsp-ing/stuEditTask.jsp</result>
-			<result name="choiceTasksAction" type="redirect">TaskAction_showChoiceTasks</result>
 			<result name="stuProposeTasksPage">/WEB-INF/jsp-ing/stuProposeTaskList.jsp</result>
+			<!-- <result name="choiceTasksAction" type="redirect">TaskAction_showChoiceTasks</result>
 			<result name="stuProposeTaskAction" type="redirect">TaskAction_showStuProposeTasks</result>
-			<result name="taskInfo2Action" type="redirect">TaskAction_showTaskInfo2?taskId=${taskId}</result>
+			<result name="taskInfo2Action" type="redirect">TaskAction_showTaskInfo2?taskId=${taskId}</result> -->
+			<result name="choiceTasksAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">TaskAction_showChoiceTasks</param>
+			</result>
+			<result name="stuProposeTaskAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">TaskAction_showStuProposeTasks</param>
+			</result>
+			<result name="taskInfo2Action" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">TaskAction_showTaskInfo2</param>
+				<param name="taskId">${taskId}</param>
+			</result>
 		</action>
 		
 		<!-- DownloadAction -->
